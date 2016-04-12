@@ -1,5 +1,6 @@
 package personalspaceinvaders;
 
+import java.awt.Graphics2D;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -94,7 +95,9 @@ public class Entity {
     
     public void update(float delta) {
         for (Part part : parts.values()) {
-            part.update(delta);
+            if (part.isActive()) {
+                part.update(delta);
+            }
         }
         
         while (!partsToRemove.isEmpty()) {
@@ -103,6 +106,14 @@ public class Entity {
         
         while (!partsToAdd.isEmpty()) {
             attach(partsToAdd.remove(0));
+        }
+    }
+    
+    public void draw(Graphics2D g2d) {
+        for (Part part : parts.values()) {
+            if (part.isActive() && part.isVisible()) {
+                part.draw(g2d);
+            }
         }
     }
 }

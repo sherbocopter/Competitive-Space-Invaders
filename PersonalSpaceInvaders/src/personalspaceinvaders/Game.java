@@ -8,6 +8,10 @@ import javax.swing.JFrame;
  */
 public class Game extends JFrame implements Commons {
     public Game() {
+        initUI();
+    }
+    
+    private void initUI() {
         add(new GameBoard());
         
         setTitle("Personal Space Invaders - alpha af");
