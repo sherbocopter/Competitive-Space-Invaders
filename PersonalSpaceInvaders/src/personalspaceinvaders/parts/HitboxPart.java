@@ -15,14 +15,14 @@ public class HitboxPart extends Part {
     private float width;
     private float height;
     
+    private Color color;
+    
     public HitboxPart(float xOffset, float yOffset, float rotationOffset, float width, float height) {
         this.xOffset = xOffset;
         this.yOffset = yOffset;
         this.rotationOffset = rotationOffset;
         this.width = width;
         this.height = height;
-        
-        this.setIsVisible(true);
     }
     
     public float getXOffset() {
@@ -63,6 +63,14 @@ public class HitboxPart extends Part {
     
     public void setHeight(float height) {
         this.height = height;
+    }
+    
+    public Color getColor() {
+        return color;
+    }
+    
+    public void setColor(Color color) {
+        this.color = color;
     }
     
     @Override

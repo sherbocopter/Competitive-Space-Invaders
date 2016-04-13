@@ -28,6 +28,14 @@ public class Entity {
         this.isActive = isActive;
     }
     
+    public boolean isVisible() {
+        return isVisible;
+    }
+    
+    public void setVisible(boolean isVisible) {
+        this.isVisible = isVisible;
+    }
+    
     public <T extends Part> boolean has(Class<T> partClass) {
         return parts.containsKey(partClass);
     }

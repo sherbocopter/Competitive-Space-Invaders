@@ -21,7 +21,7 @@ public abstract class Part {
         return isVisible;
     }
     
-    public final void setIsVisible(boolean isVisible) {
+    public final void setVisible(boolean isVisible) {
         this.isVisible = isVisible;
     }
     

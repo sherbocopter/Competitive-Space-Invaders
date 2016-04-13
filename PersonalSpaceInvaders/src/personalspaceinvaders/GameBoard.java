@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import personalspaceinvaders.factories.WavesFactory;
+import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
 import personalspaceinvaders.parts.TransformPart;
@@ -87,7 +89,9 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         Graphics2D g2d = (Graphics2D) g;
         
         for (Entity entity : entities) {
-            entity.draw(g2d);
+            if (entity.isVisible()) {
+                entity.draw(g2d);
+            }
         }
     }
     
@@ -96,8 +100,10 @@ public class GameBoard extends JPanel implements Runnable, Commons {
     }
     
     //
-    //  should use a factory class instead
+    // DEBUG
     //
+    
+    /*
     private Entity createAlien() {
         Entity alien = new Entity();
         
@@ -108,8 +114,11 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         
         return alien;
     }
-    
+    */
+
     private void temporaryEntitiesInit() {
-        entities.add(createAlien());
+        WavesFactory wf = WavesFactory.getInstance();
+        
+        entities.addAll(wf.createWave(WaveType.WAVE_BASIC_BLOCK));
     }
 }
