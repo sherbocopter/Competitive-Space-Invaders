@@ -119,6 +119,6 @@ public class GameBoard extends JPanel implements Runnable, Commons {
     private void temporaryEntitiesInit() {
         WavesFactory wf = WavesFactory.getInstance();
         
-        entities.addAll(wf.createWave(WaveType.WAVE_BASIC_BLOCK));
+        entities.addAll(wf.createWave(WaveType.WAVE_MIXED_BLOCK));
     }
 }

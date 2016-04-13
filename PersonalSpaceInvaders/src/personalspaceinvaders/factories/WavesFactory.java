@@ -18,7 +18,8 @@ public class WavesFactory implements Commons {
     }
     
     public static enum WaveType {
-        WAVE_BASIC_BLOCK
+        WAVE_BASIC_BLOCK,
+        WAVE_MIXED_BLOCK
     }
     
     //
@@ -66,6 +67,9 @@ public class WavesFactory implements Commons {
             case WAVE_BASIC_BLOCK: {
                 return createBasicBlock();
             }
+            case WAVE_MIXED_BLOCK: {
+                return createMixedBlock();
+            }
             default: {
                 throw new IllegalArgumentException("waveType not found");
             }
@@ -89,6 +93,29 @@ public class WavesFactory implements Commons {
             entities.addAll(createLine(EntityType.ALIEN_BASIC_WHITE, horCount,
                                 left, i * stepY, right, i * stepY));
         }
+        
+        return entities;
+    }
+    
+    private ArrayList<Entity> createMixedBlock() {
+        ArrayList<Entity> entities = new ArrayList<>();
+        
+        float left = 100;
+        float right = 540;
+        float top = 100;
+        float bottom = 250;
+        int horCount = 5;
+        int verCount = 3;
+        
+        float stepX = (right - left) / (horCount - 1);
+        float stepY = (bottom - top) / (verCount - 1);
+        
+        entities.addAll(createLine(EntityType.ALIEN_BASIC_WHITE, horCount,
+                                left, 1 * stepY, right, 1 * stepY));
+        entities.addAll(createLine(EntityType.ALIEN_BASIC_GREEN, horCount,
+                                left, 2 * stepY, right, 3 * stepY));
+        entities.addAll(createLine(EntityType.ALIEN_BASIC_RED, horCount,
+                                left, 4 * stepY, right, 4 * stepY));
         
         return entities;
     }

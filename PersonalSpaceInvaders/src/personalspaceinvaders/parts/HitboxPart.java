@@ -75,7 +75,7 @@ public class HitboxPart extends Part {
     
     @Override
     public void draw(Graphics2D g2d) {
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(color);
         TransformPart transform = entity.get(TransformPart.class);
         g2d.fillRect((int) (transform.getX() + xOffset),
                         (int) (transform.getY() + yOffset),
