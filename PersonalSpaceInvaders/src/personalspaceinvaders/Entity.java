@@ -15,6 +15,7 @@ import java.util.Map;
 public class Entity {
     private boolean isInitialized = false;
     private boolean isActive = false;
+    private boolean isVisible = true;
     private HashMap<Class<? extends Part>, Part> parts = new HashMap<>();
     private ArrayList<Part> partsToAdd = new ArrayList<>();
     private ArrayList<Class<? extends Part>> partsToRemove = new ArrayList<>();

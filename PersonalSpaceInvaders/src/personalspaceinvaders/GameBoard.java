@@ -102,7 +102,7 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         Entity alien = new Entity();
         
         alien.attach(new TransformPart(100, 100, 0, 1));
-        alien.attach(new HitboxPart(0, 0, 0, 10, 10));
+        alien.attach(new HitboxPart(-25, -15, 0, 50, 30));
         alien.attach(new HitpointsPart(100));
         alien.setActive(true);
         
