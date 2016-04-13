@@ -104,6 +104,7 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         alien.attach(new TransformPart(100, 100, 0, 1));
         alien.attach(new HitboxPart(0, 0, 0, 10, 10));
         alien.attach(new HitpointsPart(100));
+        alien.setActive(true);
         
         return alien;
     }
