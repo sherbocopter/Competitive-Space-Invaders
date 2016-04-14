@@ -46,17 +46,16 @@ public class GameBoard extends JPanel implements Runnable, Commons {
     
     @Override
     public void run() {
-        long beforeTime, deltaTime, sleepTime;
+        long beforeTime, deltaTime = 0, sleepTime;
         
         beforeTime = System.currentTimeMillis();
         
         while (inGame) {
             repaint();
+            updateEntities(deltaTime);
             
             deltaTime = System.currentTimeMillis() - beforeTime;
             sleepTime = FPS_DELAY - deltaTime;
-            
-            updateEntities(deltaTime);
             
             if (sleepTime < 0) {
                 sleepTime = 2;

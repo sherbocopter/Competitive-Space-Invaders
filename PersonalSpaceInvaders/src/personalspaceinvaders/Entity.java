@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Entity {
     private boolean isInitialized = false;
-    private boolean isActive = false;
+    private boolean isActive = true;
     private boolean isVisible = true;
     private HashMap<Class<? extends Part>, Part> parts = new HashMap<>();
     private ArrayList<Part> partsToAdd = new ArrayList<>();
@@ -120,7 +120,7 @@ public class Entity {
     
     public void draw(Graphics2D g2d) {
         for (Part part : parts.values()) {
-            if (part.isActive() && part.isVisible()) {
+            if (part.isVisible()) {
                 part.draw(g2d);
             }
         }

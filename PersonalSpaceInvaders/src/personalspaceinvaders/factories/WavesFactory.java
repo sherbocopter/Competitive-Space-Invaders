@@ -47,9 +47,6 @@ public class WavesFactory implements Commons {
             transform.setX(x1 + i * stepX);
             transform.setY(y1 + i * stepY);
             
-            entity.setActive(true);
-            entity.setActive(false);
-            
             entities.add(entity);
         }
         

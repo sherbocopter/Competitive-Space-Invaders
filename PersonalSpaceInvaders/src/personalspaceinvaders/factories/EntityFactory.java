@@ -2,6 +2,8 @@ package personalspaceinvaders.factories;
 
 import java.awt.Color;
 import personalspaceinvaders.Entity;
+import personalspaceinvaders.behaviours.FlyDownBehaviour;
+import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
 import personalspaceinvaders.parts.TransformPart;
@@ -50,11 +52,20 @@ public class EntityFactory {
         alien.attach(new TransformPart(100, 100, 0, 1));
         alien.attach(new HitpointsPart(100));
         
+        //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -15, 0, 50, 30);
         hitbox.setColor(Color.WHITE);
         hitbox.setVisible(true);
-        
         alien.attach(hitbox);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+        FlyDownBehaviour behaviour = new FlyDownBehaviour(3);
+        controller.attach(behaviour);
+        controller.setActive(true);
+        alien.attach(controller);
+        
+        alien.setActive(true);
         
         return alien;
     }
