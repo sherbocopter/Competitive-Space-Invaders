@@ -60,7 +60,7 @@ public class EntityFactory {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyDownBehaviour behaviour = new FlyDownBehaviour(10);
+        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
         controller.attach(behaviour);
         controller.setActive(true);
         alien.attach(controller);
@@ -76,11 +76,18 @@ public class EntityFactory {
         alien.attach(new TransformPart(100, 100, 0, 1));
         alien.attach(new HitpointsPart(120));
         
+        //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -20, 0, 50, 40);
         hitbox.setColor(Color.RED);
         hitbox.setVisible(true);
-        
         alien.attach(hitbox);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
+        controller.attach(behaviour);
+        controller.setActive(true);
+        alien.attach(controller);
         
         return alien;
     }
@@ -91,11 +98,18 @@ public class EntityFactory {
         alien.attach(new TransformPart(100, 100, 0, 1));
         alien.attach(new HitpointsPart(80));
         
+        //hitbox
         HitboxPart hitbox = new HitboxPart(-20, -10, 0, 40, 20);
         hitbox.setColor(Color.GREEN);
         hitbox.setVisible(true);
-        
         alien.attach(hitbox);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
+        controller.attach(behaviour);
+        controller.setActive(true);
+        alien.attach(controller);
         
         return alien;
     }
