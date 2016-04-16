@@ -3,6 +3,7 @@ package personalspaceinvaders;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -49,25 +50,27 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         long beforeTime, deltaTime = 0, sleepTime;
         
         beforeTime = System.currentTimeMillis();
-        
+        //int DEBUG_frame = 0;
+        //float DEBUG_time = 0;
         while (inGame) {
             repaint();
-            updateEntities(deltaTime);
+            updateEntities((float) deltaTime / 1000);
             
             deltaTime = System.currentTimeMillis() - beforeTime;
             sleepTime = FPS_DELAY - deltaTime;
+            beforeTime = System.currentTimeMillis();
             
             if (sleepTime < 0) {
                 sleepTime = 2;
             } //still needs some sleep
-            
+            //DEBUG_time += (float) deltaTime / 1000;
+            //System.out.println(DEBUG_frame++ + ": " + DEBUG_time);
             try {
                 Thread.sleep(sleepTime);
             }
             catch (InterruptedException e) {
                 System.out.println(e.getMessage());
             }
-            beforeTime = System.currentTimeMillis();
         }
         
         gameOver();
@@ -92,6 +95,9 @@ public class GameBoard extends JPanel implements Runnable, Commons {
                 entity.draw(g2d);
             }
         }
+        
+        Toolkit.getDefaultToolkit().sync();
+        g.dispose();
     }
     
     private void gameOver() {

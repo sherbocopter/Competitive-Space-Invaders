@@ -60,7 +60,7 @@ public class EntityFactory {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyDownBehaviour behaviour = new FlyDownBehaviour(3);
+        FlyDownBehaviour behaviour = new FlyDownBehaviour(10);
         controller.attach(behaviour);
         controller.setActive(true);
         alien.attach(controller);
