@@ -3,6 +3,7 @@ package personalspaceinvaders.factories;
 import java.awt.Color;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
+import personalspaceinvaders.behaviours.WiggleBehaviour;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
@@ -60,8 +61,10 @@ public class EntityFactory {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
-        controller.attach(behaviour);
+        FlyDownBehaviour flyDownBehavior = new FlyDownBehaviour(15);
+        controller.attach(flyDownBehavior);
+        WiggleBehaviour wiggleBehaviour = new WiggleBehaviour(20, 5);
+        controller.attach(wiggleBehaviour);
         controller.setActive(true);
         alien.attach(controller);
         
