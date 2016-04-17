@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import personalspaceinvaders.factories.EntityFactory;
+import personalspaceinvaders.factories.EntityFactory.EntityType;
 import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.parts.HitboxPart;
@@ -31,6 +33,8 @@ public class GameBoard extends JPanel implements Runnable, Commons {
     private void init() {
         setFocusable(true);
         setBackground(Color.BLACK);
+        
+        addKeyListener(KeyboardManager.getInstance());
         
         gameInit();
         setDoubleBuffered(true);
@@ -77,6 +81,9 @@ public class GameBoard extends JPanel implements Runnable, Commons {
     }
     
     private void updateEntities(float deltaTime) {
+        KeyboardManager km = KeyboardManager.getInstance();
+        km.poll();
+        
         for (Entity entity : entities) {
             if (entity.isActive()) {
                 entity.update(deltaTime);
@@ -123,7 +130,9 @@ public class GameBoard extends JPanel implements Runnable, Commons {
 
     private void temporaryEntitiesInit() {
         WavesFactory wf = WavesFactory.getInstance();
+        EntityFactory ef = EntityFactory.getInstance();
         
         entities.addAll(wf.createWave(WaveType.WAVE_MIXED_BLOCK));
+        entities.add(ef.createEntity(EntityType.PLAYER_BASIC));
     }
 }

@@ -3,6 +3,7 @@ package personalspaceinvaders.factories;
 import java.awt.Color;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
+import personalspaceinvaders.behaviours.PlayerMoveBehaviour;
 import personalspaceinvaders.behaviours.WiggleBehaviour;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
@@ -23,7 +24,8 @@ public class EntityFactory {
     public static enum EntityType {
         ALIEN_BASIC_WHITE,
         ALIEN_BASIC_RED,
-        ALIEN_BASIC_GREEN
+        ALIEN_BASIC_GREEN,
+        PLAYER_BASIC
     }
     
     public Entity createEntity(EntityType type) {
@@ -39,6 +41,9 @@ public class EntityFactory {
             case ALIEN_BASIC_GREEN: {
                 entity = createBasicGreenAlien();
             } break;
+            case PLAYER_BASIC: {
+                entity = createBasicPlayer();
+            } break;
             default: {
                 throw new IllegalArgumentException("entityType not found");
             }
@@ -50,7 +55,7 @@ public class EntityFactory {
     private Entity createBasicWhiteAlien() {
         Entity alien = new Entity();
         
-        alien.attach(new TransformPart(100, 100, 0, 1));
+        alien.attach(new TransformPart(0, 0, 0, 1));
         alien.attach(new HitpointsPart(100));
         
         //hitbox
@@ -61,6 +66,7 @@ public class EntityFactory {
         
         //controller
         ControllerPart controller = new ControllerPart();
+        
         FlyDownBehaviour flyDownBehavior = new FlyDownBehaviour(15);
         controller.attach(flyDownBehavior);
         WiggleBehaviour wiggleBehaviour = new WiggleBehaviour(20, 5);
@@ -76,7 +82,7 @@ public class EntityFactory {
     private Entity createBasicRedAlien() {
         Entity alien = new Entity();
         
-        alien.attach(new TransformPart(100, 100, 0, 1));
+        alien.attach(new TransformPart(0, 0, 0, 1));
         alien.attach(new HitpointsPart(120));
         
         //hitbox
@@ -98,7 +104,7 @@ public class EntityFactory {
     private Entity createBasicGreenAlien() {
         Entity alien = new Entity();
         
-        alien.attach(new TransformPart(100, 100, 0, 1));
+        alien.attach(new TransformPart(0, 0, 0, 1));
         alien.attach(new HitpointsPart(80));
         
         //hitbox
@@ -115,5 +121,26 @@ public class EntityFactory {
         alien.attach(controller);
         
         return alien;
+    }
+    
+    private Entity createBasicPlayer() {
+        Entity player = new Entity();
+        
+        player.attach(new TransformPart(320, 400, 0, 1));
+        player.attach(new HitpointsPart(200));
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-30, -20, 0, 60, 40);
+        hitbox.setColor(Color.BLUE);
+        hitbox.setVisible(true);
+        player.attach(hitbox);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+        controller.setActive(true);
+        player.attach(controller);
+        controller.attach(new PlayerMoveBehaviour(100, 70));
+        
+        return player;
     }
 }
