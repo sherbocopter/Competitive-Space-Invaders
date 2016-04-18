@@ -13,8 +13,7 @@ public class Game extends JFrame implements Commons {
     }
     
     private void initUI() {
-        GameBoard gb = new GameBoard();
-        add(gb);
+        add(SceneManager.getInstance());
 
         setTitle("Personal Space Invaders - alpha af");
         setDefaultCloseOperation(EXIT_ON_CLOSE);

@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import personalspaceinvaders.Scenes.GameScene;
 import personalspaceinvaders.factories.EntityFactory;
 import personalspaceinvaders.factories.EntityFactory.EntityType;
 import personalspaceinvaders.factories.WavesFactory;
@@ -19,14 +20,21 @@ import personalspaceinvaders.parts.TransformPart;
  *
  * @author SHerbocopter
  */
-public class GameBoard extends JPanel implements Runnable, Commons {
+public class SceneManager extends JPanel implements Runnable, Commons {
+    private static SceneManager instance = null;
+    public static SceneManager getInstance() {
+        if (instance == null) {
+            instance = new SceneManager();
+        }
+        return instance;
+    }
+    
     private boolean inGame = true;
-    
     private ArrayList<Entity> entities = new ArrayList<>();
-    
     private Thread animator;
+    private Scene currentScene;
     
-    public GameBoard() {
+    private SceneManager() {
         init();
     }
     
@@ -36,13 +44,13 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         
         addKeyListener(KeyboardManager.getInstance());
         
+        changeScene(new GameScene());
+        
         gameInit();
         setDoubleBuffered(true);
     }
     
     private void gameInit() {
-        temporaryEntitiesInit();
-        
         if (animator == null || !inGame) {
             animator = new Thread(this);
             animator.start();
@@ -58,7 +66,7 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         //float DEBUG_time = 0;
         while (inGame) {
             repaint();
-            updateEntities((float) deltaTime / 1000);
+            updateScene((float) deltaTime / 1000);
             
             deltaTime = System.currentTimeMillis() - beforeTime;
             sleepTime = FPS_DELAY - deltaTime;
@@ -80,28 +88,15 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         gameOver();
     }
     
-    private void updateEntities(float deltaTime) {
-        KeyboardManager km = KeyboardManager.getInstance();
-        km.poll();
-        
-        for (Entity entity : entities) {
-            if (entity.isActive()) {
-                entity.update(deltaTime);
-            }
-        }
+    private void updateScene(float deltaTime) {
+        currentScene.update(deltaTime);
     }
     
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         
-        Graphics2D g2d = (Graphics2D) g;
-        
-        for (Entity entity : entities) {
-            if (entity.isVisible()) {
-                entity.draw(g2d);
-            }
-        }
+        currentScene.draw(g);
         
         Toolkit.getDefaultToolkit().sync();
         g.dispose();
@@ -111,28 +106,12 @@ public class GameBoard extends JPanel implements Runnable, Commons {
         
     }
     
-    //
-    // DEBUG
-    //
-    
-    /*
-    private Entity createAlien() {
-        Entity alien = new Entity();
+    public void changeScene(Scene newScene) {
+        if (currentScene != null) {
+            currentScene.unload();
+        }
         
-        alien.attach(new TransformPart(100, 100, 0, 1));
-        alien.attach(new HitboxPart(-25, -15, 0, 50, 30));
-        alien.attach(new HitpointsPart(100));
-        alien.setActive(true);
-        
-        return alien;
-    }
-    */
-
-    private void temporaryEntitiesInit() {
-        WavesFactory wf = WavesFactory.getInstance();
-        EntityFactory ef = EntityFactory.getInstance();
-        
-        entities.addAll(wf.createWave(WaveType.WAVE_MIXED_BLOCK));
-        entities.add(ef.createEntity(EntityType.PLAYER_BASIC));
+        newScene.load();
+        currentScene = newScene;
     }
 }
