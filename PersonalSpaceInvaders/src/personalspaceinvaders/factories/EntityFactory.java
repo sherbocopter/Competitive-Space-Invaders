@@ -8,6 +8,7 @@ import personalspaceinvaders.behaviours.WiggleBehaviour;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
+import personalspaceinvaders.parts.HudFocusablePart;
 import personalspaceinvaders.parts.TransformPart;
 
 /**
@@ -25,7 +26,8 @@ public class EntityFactory {
         ALIEN_BASIC_WHITE,
         ALIEN_BASIC_RED,
         ALIEN_BASIC_GREEN,
-        PLAYER_BASIC
+        PLAYER_BASIC,
+        BUTTON_BASIC
     }
     
     public Entity createEntity(EntityType type) {
@@ -43,6 +45,9 @@ public class EntityFactory {
             } break;
             case PLAYER_BASIC: {
                 entity = createBasicPlayer();
+            } break;
+            case BUTTON_BASIC: {
+                entity = createBasicButton();
             } break;
             default: {
                 throw new IllegalArgumentException("entityType not found");
@@ -142,5 +147,26 @@ public class EntityFactory {
         controller.attach(new PlayerMoveBehaviour(100, 70));
         
         return player;
+    }
+    
+    private Entity createBasicButton() {
+        Entity button = new Entity();
+        
+        button.attach(new TransformPart(50, 50, 0, 1));
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-20, -10, 0, 40, 20);
+        hitbox.setColor(Color.YELLOW);
+        hitbox.setVisible(true);
+        button.attach(hitbox);
+        
+        //focusable
+        HudFocusablePart focusable = new HudFocusablePart(-30, -20, 0, 60, 40);
+        focusable.setHighlightWidth(4);
+        focusable.setColor(Color.WHITE);
+        focusable.setVisible(true);
+        button.attach(focusable);
+        
+        return button;
     }
 }

@@ -65,6 +65,7 @@ public class SceneManager extends JPanel implements Runnable, Commons {
         //int DEBUG_frame = 0;
         //float DEBUG_time = 0;
         while (inGame) {
+            
             repaint();
             updateScene((float) deltaTime / 1000);
             
@@ -89,12 +90,16 @@ public class SceneManager extends JPanel implements Runnable, Commons {
     }
     
     private void updateScene(float deltaTime) {
+        if (currentScene == null) return;
+        
         currentScene.update(deltaTime);
     }
     
     @Override
     public void paint(Graphics g) {
         super.paint(g);
+        
+        if (currentScene == null) return;
         
         currentScene.draw(g);
         
