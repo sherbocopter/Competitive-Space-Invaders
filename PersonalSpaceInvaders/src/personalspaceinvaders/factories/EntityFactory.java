@@ -1,6 +1,8 @@
 package personalspaceinvaders.factories;
 
 import java.awt.Color;
+import java.awt.Font;
+import personalspaceinvaders.Commons;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
 import personalspaceinvaders.behaviours.PlayerMoveBehaviour;
@@ -9,13 +11,14 @@ import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 
 /**
  *
  * @author SHerbocopter
  */
-public class EntityFactory {
+public class EntityFactory implements Commons {
     private static final EntityFactory instance = new EntityFactory();
     private EntityFactory() { }
     public static EntityFactory getInstance() {
@@ -154,14 +157,15 @@ public class EntityFactory {
         
         button.attach(new TransformPart(50, 50, 0, 1));
         
-        //hitbox
-        HitboxPart hitbox = new HitboxPart(-20, -10, 0, 40, 20);
-        hitbox.setColor(Color.YELLOW);
-        hitbox.setVisible(true);
-        button.attach(hitbox);
+        //textLabel
+        Font font = FONT_DEFAULT;
+        TextLabelPart textLabel = new TextLabelPart(font, -100, -20, 0, 200, 40);
+        textLabel.setVisible(true);
+        textLabel.setColor(Color.YELLOW);
+        button.attach(textLabel);
         
         //focusable
-        HudFocusablePart focusable = new HudFocusablePart(-30, -20, 0, 60, 40);
+        HudFocusablePart focusable = new HudFocusablePart(-100, -20, 0, 200, 40);
         focusable.setHighlightWidth(4);
         focusable.setColor(Color.WHITE);
         focusable.setVisible(true);

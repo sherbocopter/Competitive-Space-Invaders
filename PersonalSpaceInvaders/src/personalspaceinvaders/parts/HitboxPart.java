@@ -15,7 +15,7 @@ public class HitboxPart extends Part {
     private float width;
     private float height;
     
-    private Color color;
+    private Color color = Color.WHITE;
     
     public HitboxPart(float xOffset, float yOffset, float rotationOffset, float width, float height) {
         this.xOffset = xOffset;
@@ -25,6 +25,7 @@ public class HitboxPart extends Part {
         this.height = height;
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Getters + Setters">
     public float getXOffset() {
         return xOffset;
     }
@@ -72,6 +73,7 @@ public class HitboxPart extends Part {
     public void setColor(Color color) {
         this.color = color;
     }
+//</editor-fold>
     
     @Override
     public void draw(Graphics2D g2d) {
