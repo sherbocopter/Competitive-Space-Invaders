@@ -29,7 +29,7 @@ public class HudNode {
         this.managedFocusable.setFocused(isFocused);
     }
     
-    public void performFocusableAction() {
-        //sets the shouldPerform in the managedFocusable
+    public void executeCommand() {
+        this.managedFocusable.executeCommand();
     }
 }

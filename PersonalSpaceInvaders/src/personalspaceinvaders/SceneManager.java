@@ -2,19 +2,11 @@ package personalspaceinvaders;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import personalspaceinvaders.Scenes.GameScene;
-import personalspaceinvaders.factories.EntityFactory;
-import personalspaceinvaders.factories.EntityFactory.EntityType;
-import personalspaceinvaders.factories.WavesFactory;
-import personalspaceinvaders.factories.WavesFactory.WaveType;
-import personalspaceinvaders.parts.HitboxPart;
-import personalspaceinvaders.parts.HitpointsPart;
-import personalspaceinvaders.parts.TransformPart;
+import personalspaceinvaders.Scenes.MainMenuScene;
 
 /**
  *
@@ -44,7 +36,7 @@ public class SceneManager extends JPanel implements Runnable, Commons {
         
         addKeyListener(KeyboardManager.getInstance());
         
-        changeScene(new GameScene());
+        changeScene(new MainMenuScene());
         
         gameInit();
         setDoubleBuffered(true);

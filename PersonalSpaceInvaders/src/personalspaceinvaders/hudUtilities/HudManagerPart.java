@@ -51,7 +51,7 @@ public class HudManagerPart extends Part {
             focus(currentNode.rightNode);
         }
         else if (km.keyDownOnce(selectKey)) {
-            currentNode.performFocusableAction();
+            currentNode.executeCommand();
         }
     }
     

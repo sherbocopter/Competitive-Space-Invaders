@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
+import personalspaceinvaders.Command;
 import personalspaceinvaders.Part;
 
 /**
@@ -12,7 +13,8 @@ import personalspaceinvaders.Part;
  */
 public class HudFocusablePart extends Part {
     private boolean isFocused = false;
-    private boolean shouldPerform = false;
+    private boolean shouldExecute = false;
+    private Command command = null;
     
     private float xOffset;
     private float yOffset;
@@ -31,6 +33,15 @@ public class HudFocusablePart extends Part {
         this.height = height;
     }
     
+    //<editor-fold defaultstate="collapsed" desc="Getters + Setters">
+    public Command getCommand() {
+        return command;
+    }
+    
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+    
     public float getHighlightWidth() {
         return highlightWidth;
     }
@@ -47,12 +58,8 @@ public class HudFocusablePart extends Part {
         this.isFocused = isFocused;
     }
     
-    public boolean getShouldPerform() {
-        return shouldPerform;
-    }
-    
-    public void setShouldPerform(boolean shouldPerform) {
-        this.shouldPerform = shouldPerform;
+    public boolean getShouldExecute() {
+        return shouldExecute;
     }
     
     public float getXOffset() {
@@ -102,6 +109,21 @@ public class HudFocusablePart extends Part {
     public void setColor(Color color) {
         this.color = color;
     }
+//</editor-fold>
+    
+    public void executeCommand() {
+        this.shouldExecute = true;
+    }
+    
+    @Override
+    public void update(float delta) {
+        if (shouldExecute) {
+            if (command != null) {
+                command.execute(this);
+            }
+            shouldExecute = false;
+        }
+    }
     
     @Override
     public void draw(Graphics2D g2d) {
@@ -119,5 +141,4 @@ public class HudFocusablePart extends Part {
         
         g2d.setStroke(oldStroke);
     }
-    
 }
