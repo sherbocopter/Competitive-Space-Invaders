@@ -3,7 +3,6 @@ package personalspaceinvaders.Scenes;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import personalspaceinvaders.Command;
-import personalspaceinvaders.Commons;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.SceneManager;
@@ -18,7 +17,7 @@ import personalspaceinvaders.parts.TransformPart;
  *
  * @author SHerbocopter
  */
-public class MainMenuScene extends Scene implements Commons {
+public class MainMenuScene extends Scene {
     private class NewGameCommand implements Command {
         @Override
         public void execute(Object data) {

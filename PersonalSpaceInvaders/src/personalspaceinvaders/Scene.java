@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @author SHerbocopter
  * http://rivermanmedia.com/object-oriented-game-programming-the-scene-system/
  */
-public abstract class Scene {
+public abstract class Scene implements Commons {
     public ArrayList<Entity> entities = new ArrayList<>();
     protected Entity controlEntity = new Entity();
     
