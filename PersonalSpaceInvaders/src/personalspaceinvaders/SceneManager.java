@@ -22,7 +22,6 @@ public class SceneManager extends JPanel implements Runnable, Commons {
     }
     
     private boolean inGame = true;
-    private ArrayList<Entity> entities = new ArrayList<>();
     private Thread animator;
     private Scene currentScene;
     
@@ -83,6 +82,7 @@ public class SceneManager extends JPanel implements Runnable, Commons {
     
     private void updateScene(float deltaTime) {
         if (currentScene == null) return;
+        
         
         currentScene.update(deltaTime);
     }

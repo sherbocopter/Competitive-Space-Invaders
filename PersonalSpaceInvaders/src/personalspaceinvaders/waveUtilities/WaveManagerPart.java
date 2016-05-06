@@ -58,7 +58,7 @@ public class WaveManagerPart extends Part {
         
         currentWave = wd.getWaveInfo(waves.get(waveIndex));
         
-        managedScene.entities.addAll(wf.createWave(currentWave.type));
+        managedScene.addEntities(wf.createWave(currentWave.type));
     }
     
     @Override

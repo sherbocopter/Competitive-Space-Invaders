@@ -2,11 +2,14 @@ package personalspaceinvaders.Scenes;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.JComponent;
+import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.factories.EntityFactory;
 import personalspaceinvaders.factories.HudFactory;
 import personalspaceinvaders.factories.HudFactory.HudType;
+import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.hudUtilities.HudManagerPart;
 import personalspaceinvaders.parts.HudFocusablePart;
@@ -19,6 +22,25 @@ import personalspaceinvaders.waveUtilities.WaveManagerPart;
  * @author SHerbocopter
  */
 public class GameScene extends Scene {
+    private class AddWaveToQueueCommand implements Command {
+        private WaveType waveType = WaveType.DUMMY;
+        private Scene scene = null;
+        
+        public AddWaveToQueueCommand(WaveType waveType, Scene scene) {
+            super();
+            
+            this.scene = scene;
+            this.waveType = waveType;
+        }
+        
+        @Override
+        public void execute(Object data) {
+            WavesFactory wf = WavesFactory.getInstance();
+            
+            scene.addEntities(wf.createWave(waveType)); //to be changed
+        }
+    }
+    
     @Override
     public void load() {
         temporaryEntitiesInit();
@@ -70,18 +92,18 @@ public class GameScene extends Scene {
         TransformPart tpWave1 = buttonWave1.get(TransformPart.class);
         tpWave1.setY(120);
         tpWave1.setX(BOARD_WIDTH - 180);
-        //command
+        buttonWave1.get(HudFocusablePart.class).setCommand(new AddWaveToQueueCommand(WaveType.WAVE_BASIC_BLOCK, this));
         buttonWave1.get(TextLabelPart.class).setText("Basic");
-        entities.add(buttonWave1);
+        this.addEntity(buttonWave1);
         buttons.add(buttonWave1.get(HudFocusablePart.class));
         
         Entity buttonWave2 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave2 = buttonWave2.get(TransformPart.class);
         tpWave2.setY(tpWave1.getY());
         tpWave2.setX(tpWave1.getX() + 100);
-        //command
+        buttonWave2.get(HudFocusablePart.class).setCommand(new AddWaveToQueueCommand(WaveType.WAVE_MIXED_BLOCK, this));
         buttonWave2.get(TextLabelPart.class).setText("Mixed");
-        entities.add(buttonWave2);
+        this.addEntity(buttonWave2);
         buttons.add(buttonWave2.get(HudFocusablePart.class));
         
         Entity buttonWave3 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -90,7 +112,7 @@ public class GameScene extends Scene {
         tpWave3.setX(tpWave1.getX());
         //command
         buttonWave3.get(TextLabelPart.class).setText("Basic");
-        entities.add(buttonWave3);
+        this.addEntity(buttonWave3);
         buttons.add(buttonWave3.get(HudFocusablePart.class));
         
         Entity buttonWave4 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -99,7 +121,7 @@ public class GameScene extends Scene {
         tpWave4.setX(tpWave2.getX());
         //command
         buttonWave4.get(TextLabelPart.class).setText("Mixed");
-        entities.add(buttonWave4);
+        this.addEntity(buttonWave4);
         buttons.add(buttonWave4.get(HudFocusablePart.class));
         
         Entity buttonWave5 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -108,7 +130,7 @@ public class GameScene extends Scene {
         tpWave5.setX(tpWave1.getX());
         //command
         buttonWave5.get(TextLabelPart.class).setText("Basic");
-        entities.add(buttonWave5);
+        this.addEntity(buttonWave5);
         buttons.add(buttonWave5.get(HudFocusablePart.class));
         
         Entity buttonWave6 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -117,7 +139,7 @@ public class GameScene extends Scene {
         tpWave6.setX(tpWave2.getX());
         //command
         buttonWave6.get(TextLabelPart.class).setText("Mixed");
-        entities.add(buttonWave6);
+        this.addEntity(buttonWave6);
         buttons.add(buttonWave6.get(HudFocusablePart.class));
         
         Entity buttonClear = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -126,7 +148,7 @@ public class GameScene extends Scene {
         tpClear.setX(tpWave1.getX());
         //command
         buttonClear.get(TextLabelPart.class).setText("Clear");
-        entities.add(buttonClear);
+        this.addEntity(buttonClear);
         buttons.add(buttonClear.get(HudFocusablePart.class));
         
         Entity buttonSelect = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
@@ -135,7 +157,7 @@ public class GameScene extends Scene {
         tpSelect.setX(tpWave2.getX());
         //command
         buttonSelect.get(TextLabelPart.class).setText("Select");
-        entities.add(buttonSelect);
+        this.addEntity(buttonSelect);
         buttons.add(buttonSelect.get(HudFocusablePart.class));
         
         for (int i = 0; i < buttons.size(); ++i) {
