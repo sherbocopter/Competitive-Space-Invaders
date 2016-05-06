@@ -19,7 +19,8 @@ public class WavesFactory implements Commons {
     
     public static enum WaveType {
         WAVE_BASIC_BLOCK,
-        WAVE_MIXED_BLOCK
+        WAVE_MIXED_BLOCK,
+        DUMMY
     }
     
     //

@@ -1,17 +1,12 @@
 package personalspaceinvaders.Scenes;
 
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
-import personalspaceinvaders.Entity;
-import personalspaceinvaders.KeyboardManager;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.factories.EntityFactory;
-import personalspaceinvaders.factories.HudFactory;
 import personalspaceinvaders.factories.WavesFactory;
-import personalspaceinvaders.hudUtilities.HudManagerPart;
-import personalspaceinvaders.parts.HudFocusablePart;
-import personalspaceinvaders.parts.TransformPart;
+import personalspaceinvaders.factories.WavesFactory.WaveType;
+import personalspaceinvaders.waveUtilities.WaveManagerPart;
 
 /**
  *
@@ -39,10 +34,19 @@ public class GameScene extends Scene {
     }
     
     private void temporaryEntitiesInit() {
-        WavesFactory wf = WavesFactory.getInstance();
+        //WavesFactory wf = WavesFactory.getInstance();
         EntityFactory ef = EntityFactory.getInstance();
         
-        entities.addAll(wf.createWave(WavesFactory.WaveType.WAVE_MIXED_BLOCK));
+        //entities.addAll(wf.createWave(WavesFactory.WaveType.WAVE_BASIC_BLOCK));
         entities.add(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
+        
+        WaveManagerPart waveManager = new WaveManagerPart(this);
+        ArrayList<WaveType> waves = new ArrayList<>();
+        waves.add(WaveType.WAVE_BASIC_BLOCK);
+        waves.add(WaveType.WAVE_MIXED_BLOCK);
+        waveManager.setWaves(waves);
+        this.controlEntity.attach(waveManager);
+        waveManager.setActive(true);
+        waveManager.start();
     }
 }

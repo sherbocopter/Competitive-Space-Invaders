@@ -134,7 +134,7 @@ public class EntityFactory implements Commons {
     private Entity createBasicPlayer() {
         Entity player = new Entity();
         
-        player.attach(new TransformPart(320, 400, 0, 1));
+        player.attach(new TransformPart(PLAY_WIDTH / 2, PLAY_HEIGHT - 100, 0, 1));
         player.attach(new HitpointsPart(200));
         
         //hitbox

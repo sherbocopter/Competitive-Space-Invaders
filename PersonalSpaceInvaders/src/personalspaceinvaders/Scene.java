@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * http://rivermanmedia.com/object-oriented-game-programming-the-scene-system/
  */
 public abstract class Scene {
-    protected ArrayList<Entity> entities = new ArrayList<>();
+    public ArrayList<Entity> entities = new ArrayList<>();
     protected Entity controlEntity = new Entity();
     
     public void load() {
