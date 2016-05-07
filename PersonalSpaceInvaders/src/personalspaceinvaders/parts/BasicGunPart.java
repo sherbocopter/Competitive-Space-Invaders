@@ -16,7 +16,7 @@ public class BasicGunPart extends Part {
     private float yOffset;
     private int shootKey = KeyEvent.VK_SPACE;
     private float shootDelay = 1;
-    private float timePassed = 1;
+    private float timePassed = 0;
     private boolean canShoot = true;
     
     public BasicGunPart(float xOffset, float yOffset) {

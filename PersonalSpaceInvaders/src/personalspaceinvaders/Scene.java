@@ -13,7 +13,7 @@ public abstract class Scene implements Commons {
     protected ArrayList<Entity> entities = new ArrayList<>();
     private ArrayList<Entity> entitiesToAdd = new ArrayList<>();
     private ArrayList<Entity> entitiesToRemove = new ArrayList<>();
-    protected Entity controlEntity = new Entity();
+    public Entity controlEntity = new Entity();
     
     public void load() {
         

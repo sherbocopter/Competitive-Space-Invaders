@@ -123,12 +123,12 @@ public class TextLabelPart extends Part {
     @Override
     public void draw(Graphics2D g2d) {
         TransformPart transform = entity.get(TransformPart.class);
-        FontMetrics metrics = g2d.getFontMetrics(font);
+        //FontMetrics metrics = g2d.getFontMetrics(font);
 
         float x = transform.getX() + xOffset;
         float y = transform.getY() + yOffset;
         
-        switch(textAllign) {
+        /*switch(textAllign) {
             case ALLIGN_LEFT: {
                 
             } break;
@@ -142,10 +142,23 @@ public class TextLabelPart extends Part {
             default: {
                 return;
             }
-        }
+        }*/
         
         g2d.setFont(font);
         g2d.setColor(color);
-        g2d.drawString(text, x, y);
+        drawString(g2d, text, x, y);
     }
+    
+    private void drawString(Graphics2D g2d, String text, float x, float y) {
+        float lineX, lineY;
+        FontMetrics metrics = g2d.getFontMetrics(font);
+        int cnt = 1;
+        
+        for (String line : text.split("\n")) {
+            lineX = x + (width - metrics.stringWidth(line)) / 2;
+            lineY = y + (height - metrics.getHeight()) / 2 + metrics.getAscent() * cnt;
+            cnt++;
+            g2d.drawString(line, lineX, lineY);
+        }
+    }    
 }

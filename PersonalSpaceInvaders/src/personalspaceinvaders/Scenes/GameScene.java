@@ -1,5 +1,7 @@
 package personalspaceinvaders.Scenes;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import javax.swing.JComponent;
@@ -22,11 +24,11 @@ import personalspaceinvaders.waveUtilities.WaveManagerPart;
  * @author SHerbocopter
  */
 public class GameScene extends Scene {
-    private class AddWaveToQueueCommand implements Command {
+    private class PushWaveToStackCommand implements Command {
         private WaveType waveType = WaveType.DUMMY;
         private Scene scene = null;
         
-        public AddWaveToQueueCommand(WaveType waveType, Scene scene) {
+        public PushWaveToStackCommand(WaveType waveType, Scene scene) {
             super();
             
             this.scene = scene;
@@ -37,7 +39,42 @@ public class GameScene extends Scene {
         public void execute(Object data) {
             WavesFactory wf = WavesFactory.getInstance();
             
-            scene.addEntities(wf.createWave(waveType)); //to be changed
+            //scene.addEntities(wf.createWave(waveType)); //to be changed
+            WaveManagerPart wmp = scene.controlEntity.get(WaveManagerPart.class);
+            wmp.pushWave(waveType);
+        }
+    }
+    
+    private class PopWaveFromQueueCommand implements Command {
+        private Scene scene = null;
+        
+        public PopWaveFromQueueCommand(Scene scene) {
+            super();
+            
+            this.scene = scene;
+        }
+        
+        @Override
+        public void execute(Object data) {
+            WaveManagerPart wmp = scene.controlEntity.get(WaveManagerPart.class);
+            wmp.popWave();
+        }
+    }
+    
+    private class SendWavesCommand implements Command {
+        private Scene scene = null;
+        
+        public SendWavesCommand(Scene scene) {
+            super();
+            
+            this.scene = scene;
+        }
+        
+        @Override
+        public void execute(Object data) {
+            WaveManagerPart wmp = scene.controlEntity.get(WaveManagerPart.class);
+            wmp.start();
+            //HERE GOES THE SEND WAVES CODE
         }
     }
     
@@ -69,6 +106,7 @@ public class GameScene extends Scene {
         //entities.addAll(wf.createWave(WavesFactory.WaveType.WAVE_BASIC_BLOCK));
         this.addEntity(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
         
+        /*
         WaveManagerPart waveManager = new WaveManagerPart(this);
         ArrayList<WaveType> waves = new ArrayList<>();
         waves.add(WaveType.WAVE_BASIC_BLOCK);
@@ -77,6 +115,7 @@ public class GameScene extends Scene {
         this.controlEntity.attach(waveManager);
         waveManager.setActive(true);
         waveManager.start();
+        */
     }
     
     private void initWaveSelector() {
@@ -85,6 +124,8 @@ public class GameScene extends Scene {
         }
         
         EntityFactory ef = EntityFactory.getInstance();
+        
+        //<editor-fold defaultstate="collapsed" desc="Buttons">
         HudFactory hf = HudFactory.getInstance();
         ArrayList<HudFocusablePart> buttons = new ArrayList<>();
         
@@ -92,7 +133,7 @@ public class GameScene extends Scene {
         TransformPart tpWave1 = buttonWave1.get(TransformPart.class);
         tpWave1.setY(120);
         tpWave1.setX(BOARD_WIDTH - 180);
-        buttonWave1.get(HudFocusablePart.class).setCommand(new AddWaveToQueueCommand(WaveType.WAVE_BASIC_BLOCK, this));
+        buttonWave1.get(HudFocusablePart.class).setCommand(new PushWaveToStackCommand(WaveType.WAVE_BASIC_BLOCK, this));
         buttonWave1.get(TextLabelPart.class).setText("Basic");
         this.addEntity(buttonWave1);
         buttons.add(buttonWave1.get(HudFocusablePart.class));
@@ -101,7 +142,7 @@ public class GameScene extends Scene {
         TransformPart tpWave2 = buttonWave2.get(TransformPart.class);
         tpWave2.setY(tpWave1.getY());
         tpWave2.setX(tpWave1.getX() + 100);
-        buttonWave2.get(HudFocusablePart.class).setCommand(new AddWaveToQueueCommand(WaveType.WAVE_MIXED_BLOCK, this));
+        buttonWave2.get(HudFocusablePart.class).setCommand(new PushWaveToStackCommand(WaveType.WAVE_MIXED_BLOCK, this));
         buttonWave2.get(TextLabelPart.class).setText("Mixed");
         this.addEntity(buttonWave2);
         buttons.add(buttonWave2.get(HudFocusablePart.class));
@@ -144,10 +185,10 @@ public class GameScene extends Scene {
         
         Entity buttonClear = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpClear = buttonClear.get(TransformPart.class);
-        tpClear.setY(BOARD_HEIGHT - 150);
+        tpClear.setY(BOARD_HEIGHT - 100);
         tpClear.setX(tpWave1.getX());
-        //command
-        buttonClear.get(TextLabelPart.class).setText("Clear");
+        buttonClear.get(HudFocusablePart.class).setCommand(new PopWaveFromQueueCommand(this));
+        buttonClear.get(TextLabelPart.class).setText("Delete");
         this.addEntity(buttonClear);
         buttons.add(buttonClear.get(HudFocusablePart.class));
         
@@ -155,7 +196,7 @@ public class GameScene extends Scene {
         TransformPart tpSelect = buttonSelect.get(TransformPart.class);
         tpSelect.setY(tpClear.getY());
         tpSelect.setX(tpWave2.getX());
-        //command
+        buttonSelect.get(HudFocusablePart.class).setCommand(new SendWavesCommand(this));
         buttonSelect.get(TextLabelPart.class).setText("Select");
         this.addEntity(buttonSelect);
         buttons.add(buttonSelect.get(HudFocusablePart.class));
@@ -167,5 +208,32 @@ public class GameScene extends Scene {
         }
         
         this.controlEntity.attach(hf.createHud(HudType.WAVE_SELECTOR, buttons));
+        //</editor-fold>
+        
+        //Labels
+        Entity titleLabel = ef.createEntity(EntityFactory.EntityType.LABEL_BASIC);
+        TransformPart tpTitleLabel = titleLabel.get(TransformPart.class);
+        tpTitleLabel.setX(BOARD_WIDTH - 130);
+        tpTitleLabel.setY(60);
+        TextLabelPart tlpTitleLabel = titleLabel.get(TextLabelPart.class);
+        tlpTitleLabel.setText("Select waves");
+        tlpTitleLabel.setColor(Color.WHITE);
+        this.addEntity(titleLabel);
+        
+        Entity wavesLabel = ef.createEntity(EntityFactory.EntityType.LABEL_BASIC);
+        TransformPart tpWavesLabel = wavesLabel.get(TransformPart.class);
+        tpWavesLabel.setX(BOARD_WIDTH - 130);
+        tpWavesLabel.setY(tpWave6.getY() + 100);
+        TextLabelPart tlpWavesLabel = wavesLabel.get(TextLabelPart.class);
+        tlpWavesLabel.setFont(FONT_SMALL);
+        tlpWavesLabel.setText("Normal Block Wave\nMixed Block Wave\nNormal Block Wave\nMixed Block Wave");
+        tlpWavesLabel.setColor(Color.WHITE);
+        this.addEntity(wavesLabel);
+        
+        //WaveManager
+        WaveManagerPart waveManager = new WaveManagerPart(this);
+        waveManager.setOutputLabel(tlpWavesLabel);
+        this.controlEntity.attach(waveManager);
+        waveManager.setActive(true);
     }
 }

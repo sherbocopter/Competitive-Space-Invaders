@@ -65,7 +65,7 @@ public class MainMenuScene extends Scene {
         tp1.setY(120);
         tp1.setX(BOARD_WIDTH / 2);
         button1.get(HudFocusablePart.class).setCommand(new NewGameCommand());
-        button1.get(TextLabelPart.class).setText("New Game");
+        button1.get(TextLabelPart.class).setText("Training");
         
         Entity button2 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tp2 = button2.get(TransformPart.class);

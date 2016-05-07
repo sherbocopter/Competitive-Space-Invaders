@@ -37,6 +37,7 @@ public class EntityFactory implements Commons {
         ALIEN_BASIC_GREEN,
         PLAYER_BASIC,
         BUTTON_BASIC,
+        LABEL_BASIC,
         BULLET_BASIC
     }
     
@@ -58,6 +59,9 @@ public class EntityFactory implements Commons {
             } break;
             case BUTTON_BASIC: {
                 entity = createBasicButton();
+            } break;
+            case LABEL_BASIC: {
+                entity = createBasicLabel();
             } break;
             case BULLET_BASIC: {
                 entity = createBasicBullet();
@@ -209,6 +213,21 @@ public class EntityFactory implements Commons {
         button.attach(focusable);
         
         return button;
+    }
+    
+    private Entity createBasicLabel() {
+        Entity label = new Entity();
+        
+        label.attach(new TransformPart(0, 0, 0, 1));
+        
+        //textLabel
+        Font font = FONT_DEFAULT;
+        TextLabelPart textLabel = new TextLabelPart(font, -100, -20, 0, 200, 40);
+        textLabel.setVisible(true);
+        textLabel.setColor(Color.YELLOW);
+        label.attach(textLabel);
+        
+        return label;
     }
     
     private Entity createBasicBullet() {

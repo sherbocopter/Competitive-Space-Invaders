@@ -1,21 +1,25 @@
 package personalspaceinvaders.waveUtilities;
 
 import java.util.ArrayList;
+import personalspaceinvaders.Commons;
 import personalspaceinvaders.Part;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
+import personalspaceinvaders.parts.TextLabelPart;
 
 /**
  *
  * @author SHerbocopter
  */
-public class WaveManagerPart extends Part {
-    private ArrayList<WaveType> waves = null;
+public class WaveManagerPart extends Part implements Commons {
+    private ArrayList<WaveType> waves = new ArrayList<>();
     private int waveCounter;
     private float timePassed;
     private WaveInfo currentWave;
     private Scene managedScene;
+    private int maxCapacity = MAX_WAVES;
+    private TextLabelPart outputLabel = null;
     
     public WaveManagerPart(Scene managedScene) {
         this.managedScene = managedScene;
@@ -24,9 +28,27 @@ public class WaveManagerPart extends Part {
         currentWave = new WaveInfo();
     }
     
+    public void setOutputLabel(TextLabelPart outputLabel) {
+        this.outputLabel = outputLabel;
+    }
+    
     public void setWaves(ArrayList<WaveType> waves) {
-        this.waves = new ArrayList<>();
+        this.waves.clear();
         this.waves.addAll(waves);
+    }
+    
+    public void pushWave(WaveType wave) {
+        if (waves.size() >= maxCapacity)
+            return;
+        
+        this.waves.add(wave);
+    }
+    
+    public void popWave() {
+        if (this.waves.isEmpty())
+            return;
+        
+        this.waves.remove(waves.size() - 1);
     }
     
     public void start() {
@@ -63,6 +85,10 @@ public class WaveManagerPart extends Part {
     
     @Override
     public void update(float delta) {
+        if (outputLabel != null) {
+            outputLabel.setText(formatWaveList());
+        }
+        
         if (waveCounter == -1) {
             return;
         }
@@ -72,5 +98,25 @@ public class WaveManagerPart extends Part {
             timePassed = timePassed - currentWave.duration;
             prepareNextWave();
         }
+    }
+    
+    private String formatWaveList() {
+        if (waves.isEmpty())
+            return "";
+        
+        String wl = "";
+        
+        WaveDictionary wd = WaveDictionary.getInstance();
+        WaveInfo wi;
+        
+        for (int i = 0; i < waves.size() - 1; ++i) {
+            wi = wd.getWaveInfo(waves.get(i));
+            wl += wi.name + "\n";
+        }
+        
+        wi = wd.getWaveInfo(waves.get(waves.size() - 1));
+        wl += wi.name;
+        
+        return wl;
     }
 }
