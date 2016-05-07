@@ -67,7 +67,7 @@ public class GameScene extends Scene {
         EntityFactory ef = EntityFactory.getInstance();
         
         //entities.addAll(wf.createWave(WavesFactory.WaveType.WAVE_BASIC_BLOCK));
-        entities.add(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
+        this.addEntity(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
         
         WaveManagerPart waveManager = new WaveManagerPart(this);
         ArrayList<WaveType> waves = new ArrayList<>();

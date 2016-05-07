@@ -17,7 +17,9 @@ public class Entity {
     private HashMap<Class<? extends Part>, Part> parts = new HashMap<>();
     private ArrayList<Part> partsToAdd = new ArrayList<>();
     private ArrayList<Class<? extends Part>> partsToRemove = new ArrayList<>();
+    private Scene scene;
     
+    //<editor-fold defaultstate="collapsed" desc="Getters + Setters">
     public boolean isActive() {
         return isActive;
     }
@@ -34,6 +36,14 @@ public class Entity {
         this.isVisible = isVisible;
     }
     
+    public Scene getScene() {
+        return scene;
+    }
+    
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+    
     public <T extends Part> boolean has(Class<T> partClass) {
         return parts.containsKey(partClass);
     }
@@ -44,6 +54,7 @@ public class Entity {
         }
         return (T)parts.get(partClass);
     }
+//</editor-fold>
     
     public void attach(Part part) {
         if (this.has(part.getClass())) {

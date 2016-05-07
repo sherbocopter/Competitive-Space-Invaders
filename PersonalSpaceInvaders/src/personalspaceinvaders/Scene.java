@@ -53,6 +53,7 @@ public abstract class Scene implements Commons {
     
     public void addEntity(Entity newEntity) {
         entitiesToAdd.add(newEntity);
+        newEntity.setScene(this);
     }
     
     public void addEntities(ArrayList<Entity> entities) {

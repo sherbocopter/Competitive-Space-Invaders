@@ -2,15 +2,21 @@ package personalspaceinvaders.factories;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import personalspaceinvaders.Commons;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
+import personalspaceinvaders.behaviours.FlyUpBehaviour;
 import personalspaceinvaders.behaviours.PlayerMoveBehaviour;
 import personalspaceinvaders.behaviours.WiggleBehaviour;
+import personalspaceinvaders.parts.BasicGunPart;
+import personalspaceinvaders.parts.BulletStatsPart;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HitpointsPart;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.ShipStatsPart;
+import personalspaceinvaders.parts.ShipStatsPart.Faction;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 
@@ -30,7 +36,8 @@ public class EntityFactory implements Commons {
         ALIEN_BASIC_RED,
         ALIEN_BASIC_GREEN,
         PLAYER_BASIC,
-        BUTTON_BASIC
+        BUTTON_BASIC,
+        BULLET_BASIC
     }
     
     public Entity createEntity(EntityType type) {
@@ -52,6 +59,9 @@ public class EntityFactory implements Commons {
             case BUTTON_BASIC: {
                 entity = createBasicButton();
             } break;
+            case BULLET_BASIC: {
+                entity = createBasicBullet();
+            } break;
             default: {
                 throw new IllegalArgumentException("entityType not found");
             }
@@ -64,7 +74,12 @@ public class EntityFactory implements Commons {
         Entity alien = new Entity();
         
         alien.attach(new TransformPart(0, 0, 0, 1));
-        alien.attach(new HitpointsPart(100));
+        
+        //shipStats
+        ShipStatsPart shipStats = new ShipStatsPart();
+        shipStats.maxHitpoints = 120;
+        shipStats.currentHitpoints = 120;
+        shipStats.faction = Faction.FACTION_ENEMY;
         
         //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -15, 0, 50, 30);
@@ -91,7 +106,12 @@ public class EntityFactory implements Commons {
         Entity alien = new Entity();
         
         alien.attach(new TransformPart(0, 0, 0, 1));
-        alien.attach(new HitpointsPart(120));
+        
+        //shipStats
+        ShipStatsPart shipStats = new ShipStatsPart();
+        shipStats.maxHitpoints = 80;
+        shipStats.currentHitpoints = 80;
+        shipStats.faction = Faction.FACTION_ENEMY;
         
         //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -20, 0, 50, 40);
@@ -113,7 +133,12 @@ public class EntityFactory implements Commons {
         Entity alien = new Entity();
         
         alien.attach(new TransformPart(0, 0, 0, 1));
-        alien.attach(new HitpointsPart(80));
+
+        //shipStats
+        ShipStatsPart shipStats = new ShipStatsPart();
+        shipStats.maxHitpoints = 40;
+        shipStats.currentHitpoints = 40;
+        shipStats.faction = Faction.FACTION_ENEMY;
         
         //hitbox
         HitboxPart hitbox = new HitboxPart(-20, -10, 0, 40, 20);
@@ -135,13 +160,25 @@ public class EntityFactory implements Commons {
         Entity player = new Entity();
         
         player.attach(new TransformPart(PLAY_WIDTH / 2, PLAY_HEIGHT - 100, 0, 1));
-        player.attach(new HitpointsPart(200));
+        
+        //shipStats
+        ShipStatsPart shipStats = new ShipStatsPart();
+        shipStats.maxHitpoints = 100;
+        shipStats.currentHitpoints = 100;
+        shipStats.faction = Faction.FACTION_FRIENDLY;
         
         //hitbox
         HitboxPart hitbox = new HitboxPart(-30, -20, 0, 60, 40);
         hitbox.setColor(Color.BLUE);
         hitbox.setVisible(true);
         player.attach(hitbox);
+        
+        //basicGun
+        BasicGunPart gunPart = new BasicGunPart(0, -30);
+        gunPart.setShootKey(KeyEvent.VK_SPACE);
+        gunPart.setShootDelay((float) 0.5);
+        gunPart.setActive(true);
+        player.attach(gunPart);
         
         //controller
         ControllerPart controller = new ControllerPart();
@@ -172,5 +209,30 @@ public class EntityFactory implements Commons {
         button.attach(focusable);
         
         return button;
+    }
+    
+    private Entity createBasicBullet() {
+        Entity bullet = new Entity();
+        
+        bullet.attach(new TransformPart(0, 0, 0, 1));
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-3, -3, 0, 6, 6);
+        hitbox.setColor(Color.GREEN);
+        hitbox.setVisible(true);
+        bullet.attach(hitbox);
+        
+        //bulletStats
+        BulletStatsPart bulletStats = new BulletStatsPart();
+        bulletStats.damage = 80;
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+        FlyUpBehaviour behaviour = new FlyUpBehaviour(200);
+        controller.attach(behaviour);
+        controller.setActive(true);
+        bullet.attach(controller);
+        
+        return bullet;
     }
 }
