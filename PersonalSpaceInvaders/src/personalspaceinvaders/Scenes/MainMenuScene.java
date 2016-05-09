@@ -59,36 +59,50 @@ public class MainMenuScene extends Scene {
         
         EntityFactory ef = EntityFactory.getInstance();
         HudFactory hf = HudFactory.getInstance();
+        ArrayList<HudFocusablePart> focusables = new ArrayList<>();
         
-        Entity button1 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
-        TransformPart tp1 = button1.get(TransformPart.class);
-        tp1.setY(120);
-        tp1.setX(BOARD_WIDTH / 2);
-        button1.get(HudFocusablePart.class).setCommand(new NewGameCommand());
-        button1.get(TextLabelPart.class).setText("Training");
+        Entity buttonTraining = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
+        TransformPart tpTraining = buttonTraining.get(TransformPart.class);
+        tpTraining.setY(120);
+        tpTraining.setX(BOARD_WIDTH / 2);
+        buttonTraining.get(HudFocusablePart.class).setCommand(new NewGameCommand());
+        buttonTraining.get(TextLabelPart.class).setText("Training");
+        focusables.add(buttonTraining.get(HudFocusablePart.class));
+        this.addEntity(buttonTraining);
         
-        Entity button2 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
-        TransformPart tp2 = button2.get(TransformPart.class);
-        tp2.setY(tp1.getY() + 60);
-        tp2.setX(tp1.getX());
-        button2.get(TextLabelPart.class).setText("Options");
+        Entity buttonHost = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
+        TransformPart tpHost = buttonHost.get(TransformPart.class);
+        tpHost.setY(tpTraining.getY() + 60);
+        tpHost.setX(tpTraining.getX());
+        buttonHost.get(TextLabelPart.class).setText("Host game");
+        focusables.add(buttonHost.get(HudFocusablePart.class));
+        this.addEntity(buttonHost);
         
-        Entity button3 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
-        TransformPart tp3 = button3.get(TransformPart.class);
-        tp3.setY(tp2.getY() + 60);
-        tp3.setX(tp2.getX());
-        button3.get(HudFocusablePart.class).setCommand(new ExitGameCommand());
-        button3.get(TextLabelPart.class).setText("Exit");
+        Entity buttonJoin = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
+        TransformPart tpJoin = buttonJoin.get(TransformPart.class);
+        tpJoin.setY(tpHost.getY() + 60);
+        tpJoin.setX(tpHost.getX());
+        buttonJoin.get(TextLabelPart.class).setText("Join game");
+        focusables.add(buttonJoin.get(HudFocusablePart.class));
+        this.addEntity(buttonJoin);
         
-        entities.add(button1);
-        entities.add(button2);
-        entities.add(button3);
+        Entity buttonSettings = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
+        TransformPart tpSettings = buttonSettings.get(TransformPart.class);
+        tpSettings.setY(tpJoin.getY() + 60);
+        tpSettings.setX(tpJoin.getX());
+        buttonSettings.get(TextLabelPart.class).setText("Settings");
+        focusables.add(buttonSettings.get(HudFocusablePart.class));
+        this.addEntity(buttonSettings);
         
-        ArrayList<HudFocusablePart> buttons = new ArrayList<>();
-        buttons.add(button1.get(HudFocusablePart.class));
-        buttons.add(button2.get(HudFocusablePart.class));
-        buttons.add(button3.get(HudFocusablePart.class));
+        Entity buttonExit = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
+        TransformPart tpExit = buttonExit.get(TransformPart.class);
+        tpExit.setY(tpSettings.getY() + 60);
+        tpExit.setX(tpSettings.getX());
+        buttonExit.get(HudFocusablePart.class).setCommand(new ExitGameCommand());
+        buttonExit.get(TextLabelPart.class).setText("Exit");
+        focusables.add(buttonExit.get(HudFocusablePart.class));
+        this.addEntity(buttonExit);
         
-        this.controlEntity.attach(hf.createHud(HudFactory.HudType.TEST_3R1C, buttons));
+        this.controlEntity.attach(hf.createHud(HudFactory.HudType.MAIN_MENU, focusables));
     }
 }

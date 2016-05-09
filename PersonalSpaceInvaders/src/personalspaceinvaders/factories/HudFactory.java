@@ -19,6 +19,7 @@ public class HudFactory {
     
     public static enum HudType {
         TEST_3R1C, //3 rows, 1 column
+        MAIN_MENU,
         WAVE_SELECTOR
     }
     
@@ -26,6 +27,9 @@ public class HudFactory {
         switch(type) {
             case TEST_3R1C: {
                 return createHud3R1C(focusables);
+            }
+            case MAIN_MENU: {
+                return createMainMenu(focusables);
             }
             case WAVE_SELECTOR: {
                 return createWaveSelector(focusables);
@@ -67,6 +71,37 @@ public class HudFactory {
         
         hudManagerPart.setHudGraph(graph);
         hudManagerPart.setCurrentNode(node1);
+        return hudManagerPart;
+    }
+    
+    private HudManagerPart createMainMenu(ArrayList<HudFocusablePart> focusables) {
+        int cnt = 5;
+        
+        if (focusables.size() != cnt) {
+            throw new IllegalArgumentException("Invalid focusables count");
+        }
+        
+        HudManagerPart hudManagerPart = new HudManagerPart();
+        HudGraph graph = new HudGraph();
+        
+        HudNode[] nodes = new HudNode[cnt];
+        for (int i = 0; i < cnt; ++i) {
+            nodes[i] = new HudNode();
+        }
+        
+        for (int i = 0; i < cnt; ++i) {
+            nodes[i].setManagedFocusable(focusables.get(i));
+            int prev = (cnt + i - 1) % cnt;
+            int next = (i + 1) % cnt;
+            
+            nodes[i].upNode = nodes[i].leftNode = nodes[prev];
+            nodes[i].downNode = nodes[i].rightNode = nodes[next];
+            
+            graph.attach("button" + i, nodes[i]);
+        }
+        
+        hudManagerPart.setHudGraph(graph);
+        hudManagerPart.setCurrentNode(nodes[0]);
         return hudManagerPart;
     }
     
