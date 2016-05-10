@@ -111,6 +111,10 @@ public class Entity {
         parts.remove(partClass);
     }
     
+    public void die() {
+        this.scene.removeEntity(this);
+    }
+    
     public void update(float delta) {
         for (Part part : parts.values()) {
             if (part.isActive()) {

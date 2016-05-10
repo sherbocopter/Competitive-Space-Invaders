@@ -79,10 +79,16 @@ public class BasicGunPart extends Part {
         Entity bullet = ef.createEntity(EntityType.BULLET_BASIC);
         
         TransformPart tpEntity = this.entity.get(TransformPart.class);
-        TransformPart tpBullet = bullet.get(TransformPart.class);
         
+        TransformPart tpBullet = bullet.get(TransformPart.class);
         tpBullet.setX(tpEntity.getX() + xOffset);
         tpBullet.setY(tpEntity.getY() + yOffset);
+        
+        StatsPart statsBullet = bullet.get(StatsPart.class);
+        if (this.entity.has(StatsPart.class)) {
+            StatsPart statsEntity = this.entity.get(StatsPart.class);
+            statsBullet.faction = statsEntity.faction;
+        }
         
         this.entity.getScene().addEntity(bullet);
     }

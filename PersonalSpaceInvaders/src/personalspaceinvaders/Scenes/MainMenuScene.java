@@ -104,5 +104,6 @@ public class MainMenuScene extends Scene {
         this.addEntity(buttonExit);
         
         this.controlEntity.attach(hf.createHud(HudFactory.HudType.MAIN_MENU, focusables));
+        //0090.addEntity(alfieSuperCuts); what
     }
 }

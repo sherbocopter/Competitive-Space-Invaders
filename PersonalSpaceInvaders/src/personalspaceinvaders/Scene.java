@@ -3,6 +3,9 @@ package personalspaceinvaders;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import personalspaceinvaders.parts.HitboxPart;
+import personalspaceinvaders.parts.StatsPart;
+import personalspaceinvaders.parts.StatsPart.Faction;
 
 /**
  *
@@ -24,13 +27,9 @@ public abstract class Scene implements Commons {
     }
     
     public void update(float delta) {
+        //System.out.println("UPDATE");
         KeyboardManager km = KeyboardManager.getInstance();
         km.poll();
-        
-        if (entitiesToAdd.size() > 0) {
-            entities.addAll(entitiesToAdd);
-            entitiesToAdd.clear();
-        }
         
         controlEntity.update(delta);
         
@@ -39,9 +38,18 @@ public abstract class Scene implements Commons {
                 entity.update(delta);
             }
         }
+        
+        while (!entitiesToRemove.isEmpty()) {
+            entities.remove(entitiesToRemove.remove(0));
+        }
+        
+        while (!entitiesToAdd.isEmpty()) {
+            entities.add(entitiesToAdd.remove(0));
+        }
     }
     
     public void draw(Graphics g) {
+        //System.out.println("DRAW");
         Graphics2D g2d = (Graphics2D) g;
         
         for (Entity entity : entities) {
@@ -49,6 +57,22 @@ public abstract class Scene implements Commons {
                 entity.draw(g2d);
             }
         }
+    }
+    
+    public ArrayList<Entity> getCollissions(float up, float down, float left, float right) {
+        ArrayList<Entity> collided = new ArrayList<>();
+        
+        for (int i = 0; i < entities.size(); ++i) {
+            Entity entity = entities.get(i);
+            
+            if (entity.has(HitboxPart.class)) {
+                if (entity.get(HitboxPart.class).collides(up, down, left, right)) {
+                    collided.add(entity);
+                }
+            }
+        }
+        
+        return collided;
     }
     
     public void addEntity(Entity newEntity) {
@@ -59,6 +83,16 @@ public abstract class Scene implements Commons {
     public void addEntities(ArrayList<Entity> entities) {
         for (Entity entity : entities) {
             this.addEntity(entity);
+        }
+    }
+    
+    public void removeEntity(Entity newEntity) {
+        entitiesToRemove.add(newEntity);
+    }
+    
+    public void removeEntities(ArrayList<Entity> entities) {
+        for (Entity entity : entities) {
+            this.removeEntity(entity);
         }
     }
 }
