@@ -21,7 +21,7 @@ public class MainMenuScene extends Scene {
     private class NewGameCommand implements Command {
         @Override
         public void execute(Object data) {
-            SceneManager.getInstance().changeScene(new GameScene());
+            SceneManager.getInstance().changeScene(new TrainingScene());
         }
     }
     

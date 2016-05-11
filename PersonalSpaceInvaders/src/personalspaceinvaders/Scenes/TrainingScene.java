@@ -23,7 +23,7 @@ import personalspaceinvaders.waveUtilities.WaveManagerPart;
  *
  * @author SHerbocopter
  */
-public class GameScene extends Scene {
+public class TrainingScene extends Scene {
     private class PushWaveToStackCommand implements Command {
         private WaveType waveType = WaveType.DUMMY;
         private Scene scene = null;
