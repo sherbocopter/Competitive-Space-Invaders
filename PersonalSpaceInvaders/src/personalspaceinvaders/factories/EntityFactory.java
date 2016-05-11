@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import personalspaceinvaders.Commons;
 import personalspaceinvaders.Entity;
+import personalspaceinvaders.behaviours.BoundingBoxBehaviour;
+import personalspaceinvaders.behaviours.DieOffscreenBehaviour;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
 import personalspaceinvaders.behaviours.FlyUpBehaviour;
 import personalspaceinvaders.behaviours.PlayerMoveBehaviour;
@@ -97,11 +99,18 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        
-        FlyDownBehaviour flyDownBehavior = new FlyDownBehaviour(15);
-        controller.attach(flyDownBehavior);
-        WiggleBehaviour wiggleBehaviour = new WiggleBehaviour(20, 5);
-        controller.attach(wiggleBehaviour);
+            FlyDownBehaviour flyDown = new FlyDownBehaviour(100);
+            controller.attach(flyDown);
+            
+            WiggleBehaviour wiggle = new WiggleBehaviour(20, 5);
+            controller.attach(wiggle);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.upOffset = 99999; //a lot
+            dieOffscreen.downOffset = 200;
+            dieOffscreen.leftOffset = 2000;
+            dieOffscreen.rightOffset = 2000;
+            controller.attach(dieOffscreen);
         controller.setActive(true);
         alien.attach(controller);
         
@@ -205,9 +214,13 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
+            controller.attach(new PlayerMoveBehaviour(200, 200));
+            
+            BoundingBoxBehaviour boundingBox = new BoundingBoxBehaviour();
+            boundingBox.setBoundsInset(50);
+            controller.attach(boundingBox);
         controller.setActive(true);
         player.attach(controller);
-        controller.attach(new PlayerMoveBehaviour(100, 70));
         
         return player;
     }
@@ -272,8 +285,12 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyUpBehaviour behaviour = new FlyUpBehaviour(200);
-        controller.attach(behaviour);
+            FlyUpBehaviour flyUp = new FlyUpBehaviour(200);
+            controller.attach(flyUp);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.setAllBounds(10);
+            controller.attach(dieOffscreen);
         controller.setActive(true);
         bullet.attach(controller);
         
