@@ -18,10 +18,25 @@ import personalspaceinvaders.parts.TransformPart;
  * @author SHerbocopter
  */
 public class MainMenuScene extends Scene {
-    private class NewGameCommand implements Command {
+    private class NewTrainingCommand implements Command {
         @Override
         public void execute(Object data) {
             SceneManager.getInstance().changeScene(new TrainingScene());
+        }
+    }
+    
+    private class NewHostCommand implements Command {
+        @Override
+        public void execute(Object data) {
+            SceneManager.getInstance().changeScene(new MultiplayerScene());
+        }
+    }
+    
+    private class NewGuestCommand implements Command {
+        @Override
+        public void execute(Object data) {
+            //BIG TODO: dialog box to get ip and port;
+            SceneManager.getInstance().changeScene(new MultiplayerScene("localhost", MULTIPLAYER_PORT));
         }
     }
     
@@ -65,7 +80,7 @@ public class MainMenuScene extends Scene {
         TransformPart tpTraining = buttonTraining.get(TransformPart.class);
         tpTraining.setY(120);
         tpTraining.setX(BOARD_WIDTH / 2);
-        buttonTraining.get(HudFocusablePart.class).setCommand(new NewGameCommand());
+        buttonTraining.get(HudFocusablePart.class).setCommand(new NewTrainingCommand());
         buttonTraining.get(TextLabelPart.class).setText("Training");
         focusables.add(buttonTraining.get(HudFocusablePart.class));
         this.addEntity(buttonTraining);
@@ -74,6 +89,7 @@ public class MainMenuScene extends Scene {
         TransformPart tpHost = buttonHost.get(TransformPart.class);
         tpHost.setY(tpTraining.getY() + 60);
         tpHost.setX(tpTraining.getX());
+        buttonHost.get(HudFocusablePart.class).setCommand(new NewHostCommand());
         buttonHost.get(TextLabelPart.class).setText("Host game");
         focusables.add(buttonHost.get(HudFocusablePart.class));
         this.addEntity(buttonHost);
@@ -82,6 +98,7 @@ public class MainMenuScene extends Scene {
         TransformPart tpJoin = buttonJoin.get(TransformPart.class);
         tpJoin.setY(tpHost.getY() + 60);
         tpJoin.setX(tpHost.getX());
+        buttonJoin.get(HudFocusablePart.class).setCommand(new NewGuestCommand());
         buttonJoin.get(TextLabelPart.class).setText("Join game");
         focusables.add(buttonJoin.get(HudFocusablePart.class));
         this.addEntity(buttonJoin);

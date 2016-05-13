@@ -13,9 +13,9 @@ import personalspaceinvaders.parts.StatsPart.Faction;
  * http://rivermanmedia.com/object-oriented-game-programming-the-scene-system/
  */
 public abstract class Scene implements Commons {
-    protected ArrayList<Entity> entities = new ArrayList<>();
-    private ArrayList<Entity> entitiesToAdd = new ArrayList<>();
-    private ArrayList<Entity> entitiesToRemove = new ArrayList<>();
+    protected ArrayList<Entity> entities = new ArrayList<>(300);
+    protected ArrayList<Entity> entitiesToAdd = new ArrayList<>(300);
+    protected ArrayList<Entity> entitiesToRemove = new ArrayList<>(300);
     public Entity controlEntity = new Entity();
     
     public void load() {

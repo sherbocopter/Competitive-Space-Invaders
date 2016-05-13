@@ -37,6 +37,10 @@ public class WaveManagerPart extends Part implements Commons {
         this.waves.addAll(waves);
     }
     
+    public ArrayList<WaveType> getWaves() {
+        return this.waves;
+    }
+    
     public void pushWave(WaveType wave) {
         if (waves.size() >= maxCapacity)
             return;

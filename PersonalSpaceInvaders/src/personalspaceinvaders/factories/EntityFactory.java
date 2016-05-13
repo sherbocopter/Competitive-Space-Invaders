@@ -26,6 +26,11 @@ import personalspaceinvaders.parts.TransformPart;
  * @author SHerbocopter
  */
 public class EntityFactory implements Commons {
+    public float enemyUpOffset = 0;
+    public float enemyDownOffset = 0;
+    public float enemyLeftOffset = 0;
+    public float enemyRightOffset = 0;
+    
     private static final EntityFactory instance = new EntityFactory();
     private EntityFactory() { }
     public static EntityFactory getInstance() {
@@ -99,17 +104,17 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-            FlyDownBehaviour flyDown = new FlyDownBehaviour(100);
+            FlyDownBehaviour flyDown = new FlyDownBehaviour(45);
             controller.attach(flyDown);
             
             WiggleBehaviour wiggle = new WiggleBehaviour(20, 5);
             controller.attach(wiggle);
             
             DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
-            dieOffscreen.upOffset = 99999; //a lot
-            dieOffscreen.downOffset = 200;
-            dieOffscreen.leftOffset = 2000;
-            dieOffscreen.rightOffset = 2000;
+            dieOffscreen.upOffset = enemyUpOffset; //a lot
+            dieOffscreen.downOffset = enemyDownOffset;
+            dieOffscreen.leftOffset = enemyLeftOffset;
+            dieOffscreen.rightOffset = enemyRightOffset;
             controller.attach(dieOffscreen);
         controller.setActive(true);
         alien.attach(controller);
@@ -143,8 +148,15 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
-        controller.attach(behaviour);
+            FlyDownBehaviour flyDown = new FlyDownBehaviour(40);
+            controller.attach(flyDown);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.upOffset = enemyUpOffset; //a lot
+            dieOffscreen.downOffset = enemyDownOffset;
+            dieOffscreen.leftOffset = enemyLeftOffset;
+            dieOffscreen.rightOffset = enemyRightOffset;
+            controller.attach(dieOffscreen);
         controller.setActive(true);
         alien.attach(controller);
         
@@ -175,8 +187,15 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-        FlyDownBehaviour behaviour = new FlyDownBehaviour(15);
-        controller.attach(behaviour);
+            FlyDownBehaviour flyDown = new FlyDownBehaviour(40);
+            controller.attach(flyDown);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.upOffset = enemyUpOffset; //a lot
+            dieOffscreen.downOffset = enemyDownOffset;
+            dieOffscreen.leftOffset = enemyLeftOffset;
+            dieOffscreen.rightOffset = enemyRightOffset;
+            controller.attach(dieOffscreen);
         controller.setActive(true);
         alien.attach(controller);
         
@@ -214,7 +233,7 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-            controller.attach(new PlayerMoveBehaviour(200, 200));
+            controller.attach(new PlayerMoveBehaviour(180, 180));
             
             BoundingBoxBehaviour boundingBox = new BoundingBoxBehaviour();
             boundingBox.setBoundsInset(50);
@@ -285,7 +304,7 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-            FlyUpBehaviour flyUp = new FlyUpBehaviour(200);
+            FlyUpBehaviour flyUp = new FlyUpBehaviour(250);
             controller.attach(flyUp);
             
             DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();

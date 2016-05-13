@@ -113,7 +113,7 @@ public class Entity {
     
     public void die() {
         this.scene.removeEntity(this);
-        System.out.println("I DAE");
+        //System.out.println("I DAE");
     }
     
     public void update(float delta) {
