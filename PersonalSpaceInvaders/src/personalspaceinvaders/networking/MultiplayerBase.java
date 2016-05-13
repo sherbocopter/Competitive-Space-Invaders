@@ -31,6 +31,22 @@ public class MultiplayerBase extends Thread implements Commons {
         shouldSend.release();
     }
     
+    public void sendWaves(ArrayList<WaveType> waves) {
+        Message message = new Message();
+        message.type = Message.MsgType.MSG_WAVES;
+        message.data = new WavesSerData(waves);
+        
+        sendMessage(message);
+    }
+    
+    public void sendStatus() {
+        Message message = new Message();
+        message.type = Message.MsgType.MSG_ROUNDRES;
+        message.text = "Here's my stats";
+        
+        sendMessage(message);
+    }
+    
     protected void startLoops() {
         Thread recThread = new Thread(this::receiveLoop);
         recThread.start();
@@ -69,7 +85,7 @@ public class MultiplayerBase extends Thread implements Commons {
                         this.scene.setLocalWaves(wavesData.waveTypes);
                     } break;
                     case MSG_ROUNDRES: {
-                        
+                        this.scene.setPeerStatus();
                     } break;
                     default: {
                         

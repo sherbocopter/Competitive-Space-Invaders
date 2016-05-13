@@ -88,7 +88,7 @@ public class EntityFactory implements Commons {
         //shipStats
         StatsPart shipStats = new StatsPart();
         shipStats.maxHitpoints = 120;
-        shipStats.setCurrentHitpoints(120);
+        shipStats.setCurrentHitpoints(80);
         shipStats.faction = Faction.FACTION_ENEMY;
         shipStats.statsType = StatsType.SHIP;
         shipStats.damage = 50;
@@ -171,7 +171,7 @@ public class EntityFactory implements Commons {
         //shipStats
         StatsPart shipStats = new StatsPart();
         shipStats.maxHitpoints = 40;
-        shipStats.setCurrentHitpoints(40);
+        shipStats.setCurrentHitpoints(120);
         shipStats.faction = Faction.FACTION_ENEMY;
         shipStats.statsType = StatsType.SHIP;
         shipStats.damage = 50;
@@ -304,7 +304,7 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-            FlyUpBehaviour flyUp = new FlyUpBehaviour(250);
+            FlyUpBehaviour flyUp = new FlyUpBehaviour(300);
             controller.attach(flyUp);
             
             DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();

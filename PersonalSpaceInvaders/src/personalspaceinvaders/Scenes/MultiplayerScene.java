@@ -23,13 +23,12 @@ import personalspaceinvaders.parts.HudFocusablePart;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 import personalspaceinvaders.waveUtilities.MultiplayerWaveManagerPart;
-import personalspaceinvaders.waveUtilities.WaveManagerPart;
 
 /**
  *
  * @author SHerbocopter
  */
-public class MultiplayerScene extends Scene {
+public class MultiplayerScene extends GameSceneBase {
     private class PushWaveToStackCommand implements Command {
         private WaveType waveType = WaveType.DUMMY;
         private MultiplayerScene scene = null;
@@ -83,11 +82,7 @@ public class MultiplayerScene extends Scene {
         @Override
         public void execute(Object data) {
             MultiplayerWaveManagerPart mwmp = scene.controlEntity.get(MultiplayerWaveManagerPart.class);
-            
-            Message message = new Message();
-            message.type = MsgType.MSG_WAVES;
-            message.data = new WavesSerData(mwmp.remoteEncounter.getWaves());
-            scene.multiplayerBase.sendMessage(message);
+            scene.multiplayerBase.sendWaves(mwmp.remoteEncounter.getWaves());
             
             scene.setState(MultiplayerState.WAIT_WAVES);
         }
@@ -108,6 +103,7 @@ public class MultiplayerScene extends Scene {
     public MultiplayerBase multiplayerBase = null;
     private MultiplayerState gameState = MultiplayerState.DUMMY;
     private HashMap<MultiplayerState, ArrayList<Entity>> stateEntities = new HashMap<>();
+    public boolean havePeerStatus = false;
     
     public MultiplayerScene() {
         super();
@@ -188,14 +184,17 @@ public class MultiplayerScene extends Scene {
                 } break;
                 case WAIT_WAVES: {
                     MultiplayerWaveManagerPart mwmp = this.controlEntity.get(MultiplayerWaveManagerPart.class);
-                    return (mwmp.haveNewWaves == true);
+                    return mwmp.haveNewWaves;
                 }
                 case PLAY: {
-
-                } break;
+                    MultiplayerWaveManagerPart mwmp = this.controlEntity.get(MultiplayerWaveManagerPart.class);
+                    ArrayList<Entity> aliens = this.stateEntities.get(MultiplayerState.PLAY);
+                    return (mwmp.localEncounter.isFinished == true &&
+                            aliens.isEmpty());
+                }
                 case WAIT_PEER: {
-
-                } break;
+                    return havePeerStatus;
+                }
                 default: {
 
                 } break;
@@ -236,7 +235,8 @@ public class MultiplayerScene extends Scene {
                 mwmp.localEncounter.start();
             } break;
             case WAIT_PEER: {
-                
+                multiplayerBase.sendStatus();
+                System.out.println("FINISHED WAVES, WAITING");
             } break;
             default: {
                 
@@ -265,7 +265,7 @@ public class MultiplayerScene extends Scene {
                 
             } break;
             case WAIT_PEER: {
-                
+                havePeerStatus = false;
             } break;
             default: {
                 
@@ -274,11 +274,18 @@ public class MultiplayerScene extends Scene {
     }
 //</editor-fold>
     
+    //<editor-fold defaultstate="collapsed" desc="Network messaging">
     public void setLocalWaves(ArrayList<WaveType> waves) {
         MultiplayerWaveManagerPart mwmp = this.controlEntity.get(MultiplayerWaveManagerPart.class);
         mwmp.localEncounter.setWaves(waves);
         mwmp.haveNewWaves = true;
     }
+    
+    public void setPeerStatus() {
+        
+        havePeerStatus = true;
+    }
+//</editor-fold>
     
     @Override
     public void load() {
@@ -300,6 +307,26 @@ public class MultiplayerScene extends Scene {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
+    }
+    
+    @Override
+    public void spawnWave(WaveType type) {
+        WavesFactory wf = WavesFactory.getInstance();
+        
+        ArrayList<Entity> aliens = wf.createWave(type);
+        
+        this.addEntities(aliens);
+        this.stateEntities.get(MultiplayerState.PLAY).addAll(aliens);
+    }
+    
+    @Override
+    public void removeEntity(Entity entity) {
+        super.removeEntity(entity);
+        
+        ArrayList<Entity> aliens = this.stateEntities.get(MultiplayerState.PLAY);
+        if (aliens.contains(entity)) {
+            aliens.remove(entity);
+        }
     }
     
     private void temporaryEntitiesInit() {

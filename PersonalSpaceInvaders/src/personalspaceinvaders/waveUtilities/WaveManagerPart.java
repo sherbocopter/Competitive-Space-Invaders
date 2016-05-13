@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import personalspaceinvaders.Commons;
 import personalspaceinvaders.Part;
 import personalspaceinvaders.Scene;
+import personalspaceinvaders.Scenes.GameSceneBase;
 import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.parts.TextLabelPart;
@@ -17,11 +18,12 @@ public class WaveManagerPart extends Part implements Commons {
     private int waveCounter;
     private float timePassed;
     private WaveInfo currentWave;
-    private Scene managedScene;
+    private GameSceneBase managedScene;
     private int maxCapacity = MAX_WAVES;
     private TextLabelPart outputLabel = null;
+    public boolean isFinished = true;
     
-    public WaveManagerPart(Scene managedScene) {
+    public WaveManagerPart(GameSceneBase managedScene) {
         this.managedScene = managedScene;
         waveCounter = -1;
         timePassed = 0;
@@ -60,6 +62,7 @@ public class WaveManagerPart extends Part implements Commons {
             return;
         }
         
+        isFinished = false;
         waveCounter = -1;
         prepareNextWave();
     }
@@ -68,6 +71,7 @@ public class WaveManagerPart extends Part implements Commons {
         waveCounter++;
         if (waveCounter >= waves.size()) {
             waveCounter = -1;
+            isFinished = true;
         }
         else {
             prepareWave(waveCounter);
@@ -75,16 +79,14 @@ public class WaveManagerPart extends Part implements Commons {
     }
     
     private void prepareWave(int waveIndex) {
-        if (waveCounter == -1) {
+        if (waveCounter < 0) {
             return;
         }
         
         WaveDictionary wd = WaveDictionary.getInstance();
-        WavesFactory wf = WavesFactory.getInstance();
-        
         currentWave = wd.getWaveInfo(waves.get(waveIndex));
         
-        managedScene.addEntities(wf.createWave(currentWave.type));
+        managedScene.spawnWave(currentWave.type);
     }
     
     @Override
@@ -93,7 +95,7 @@ public class WaveManagerPart extends Part implements Commons {
             outputLabel.setText(formatWaveList());
         }
         
-        if (waveCounter == -1) {
+        if (waveCounter < 0) {
             return;
         }
         
