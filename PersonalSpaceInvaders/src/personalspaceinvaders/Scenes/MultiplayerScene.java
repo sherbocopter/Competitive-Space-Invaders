@@ -20,6 +20,7 @@ import personalspaceinvaders.networking.serializables.Message;
 import personalspaceinvaders.networking.serializables.Message.MsgType;
 import personalspaceinvaders.networking.serializables.WavesSerData;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 import personalspaceinvaders.waveUtilities.MultiplayerWaveManagerPart;
@@ -44,13 +45,8 @@ public class MultiplayerScene extends GameSceneBase {
         public void execute(Object data) {
             WavesFactory wf = WavesFactory.getInstance();
             
-            //scene.addEntities(wf.createWave(waveType)); //to be changed
             MultiplayerWaveManagerPart mwmp = scene.controlEntity.get(MultiplayerWaveManagerPart.class);
             mwmp.remoteEncounter.pushWave(waveType);
-            
-            Message message = new Message();
-            message.text = "U SUCK";
-            scene.multiplayerBase.sendMessage(message);
         }
     }
     
@@ -105,11 +101,16 @@ public class MultiplayerScene extends GameSceneBase {
     private HashMap<MultiplayerState, ArrayList<Entity>> stateEntities = new HashMap<>();
     public boolean havePeerStatus = false;
     
+    //special entities (also added in entities array)
+    private Entity playerShip;
+    private Entity statusLabel;
+    
     public MultiplayerScene() {
         super();
         
         this.isHost = true;
         multiplayerBase = new MultiplayerHost(this);
+        multiplayerBase.isHost = true;
         multiplayerBase.start();
         
         initialize();
@@ -123,6 +124,7 @@ public class MultiplayerScene extends GameSceneBase {
         this.hostIp = ipAddress;
         this.hostPort = port;
         multiplayerBase = new MultiplayerGuest(this, ipAddress, port);
+        multiplayerBase.isHost = false;
         multiplayerBase.start();
         
         initialize();
@@ -136,7 +138,7 @@ public class MultiplayerScene extends GameSceneBase {
             stateEntities.put(state, new ArrayList<>());
         }
         
-        temporaryEntitiesInit();
+        otherEntitiesInit();
         initWaveSelector();
         
         for (MultiplayerState state : MultiplayerState.values()) {
@@ -220,26 +222,44 @@ public class MultiplayerScene extends GameSceneBase {
         
         switch (state) {
             case WAIT_CONNECTION: {
-                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                if (this.multiplayerBase.isHost) {
+                    textLabelPart.setText("Waiting for guest\nto connect");
+                }
+                else {
+                    textLabelPart.setText("Attempting to\nreach host");
+                }
             } break;
             case SELECT_WAVES: {
                 HudManagerPart hudManager = this.controlEntity.get(HudManagerPart.class);
                 hudManager.setActive(true);
             } break;
             case WAIT_WAVES: {
+                System.out.println();
                 
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                textLabelPart.setText("Waiting for peer\nto send waves");
             } break;
             case PLAY: {
                 MultiplayerWaveManagerPart mwmp = this.controlEntity.get(MultiplayerWaveManagerPart.class);
                 mwmp.haveNewWaves = false;
                 mwmp.localEncounter.start();
+                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                StatsPart shipStats = this.playerShip.get(StatsPart.class);
+                textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
+                                        " / " + (int)shipStats.maxHitpoints);
             } break;
             case WAIT_PEER: {
                 multiplayerBase.sendStatus();
                 System.out.println("FINISHED WAVES, WAITING");
+                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                textLabelPart.setText("Waiting for peer\nto finish waves");
             } break;
             default: {
-                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                textLabelPart.setText("Something went wrong...");
             } break;
         }
     }
@@ -249,6 +269,8 @@ public class MultiplayerScene extends GameSceneBase {
             entity.setActive(false);
             entity.setVisible(false);
         }
+        
+        resetStatusLabel();
         
         switch (state) {
             case WAIT_CONNECTION: {
@@ -329,10 +351,24 @@ public class MultiplayerScene extends GameSceneBase {
         }
     }
     
-    private void temporaryEntitiesInit() {
+    private void otherEntitiesInit() {
         EntityFactory ef = EntityFactory.getInstance();
         
-        this.addEntity(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
+        //player
+        Entity player = ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC);
+        this.addEntity(player);
+        this.playerShip = player;
+        
+        //status label
+        Entity status = ef.createEntity(EntityFactory.EntityType.LABEL_BASIC);
+        TransformPart tpStatus = status.get(TransformPart.class);
+        tpStatus.setX(BOARD_WIDTH - 130);
+        tpStatus.setY(BOARD_HEIGHT / 2);
+        TextLabelPart tlpStatus = status.get(TextLabelPart.class);
+            tlpStatus.setText("");
+            tlpStatus.setColor(Color.WHITE);
+        this.addEntity(status);
+        this.statusLabel = status;
     }
     
     private void initWaveSelector() {
@@ -465,5 +501,12 @@ public class MultiplayerScene extends GameSceneBase {
         multplayerWaveManager.remoteEncounter.setOutputLabel(tlpWavesLabel);
         this.controlEntity.attach(multplayerWaveManager);
         multplayerWaveManager.setActive(true);
+    }
+    
+    private void resetStatusLabel() {
+        if (this.statusLabel != null) {
+            TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+            textLabelPart.setText("");
+        }
     }
 }

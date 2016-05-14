@@ -2,6 +2,7 @@ package personalspaceinvaders.Scenes;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
@@ -35,8 +36,8 @@ public class MainMenuScene extends Scene {
     private class NewGuestCommand implements Command {
         @Override
         public void execute(Object data) {
-            //BIG TODO: dialog box to get ip and port;
-            SceneManager.getInstance().changeScene(new MultiplayerScene("localhost", MULTIPLAYER_PORT));
+            String hostAddress = JOptionPane.showInputDialog("Enter host IP (running on port " + MULTIPLAYER_PORT + ")");
+            SceneManager.getInstance().changeScene(new MultiplayerScene(hostAddress, MULTIPLAYER_PORT));
         }
     }
     

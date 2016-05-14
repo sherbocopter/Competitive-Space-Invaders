@@ -37,7 +37,7 @@ public class MultiplayerGuest extends MultiplayerBase {
                     System.out.format(">Peer not found, trying again in %d seconds\n",
                                         POLLING_TIME / 1000);
                     foundServer = false;
-                    Thread.sleep(100);
+                    Thread.sleep(POLLING_TIME);
                 }
             }
             

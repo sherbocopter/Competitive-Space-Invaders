@@ -23,6 +23,7 @@ public class MultiplayerBase extends Thread implements Commons {
     public ObjectOutputStream streamToPeer = null;
     public MultiplayerScene scene;
     private Message messageToSend = null;
+    public boolean isHost = false;
     
     private Semaphore shouldSend = new Semaphore(0, true);
     
