@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
@@ -16,9 +17,10 @@ import personalspaceinvaders.hudUtilities.HudManagerPart;
 import personalspaceinvaders.networking.MultiplayerBase;
 import personalspaceinvaders.networking.MultiplayerGuest;
 import personalspaceinvaders.networking.MultiplayerHost;
+import personalspaceinvaders.networking.serializables.EndRoundStatusSer;
 import personalspaceinvaders.networking.serializables.Message;
 import personalspaceinvaders.networking.serializables.Message.MsgType;
-import personalspaceinvaders.networking.serializables.WavesSerData;
+import personalspaceinvaders.networking.serializables.WavesSer;
 import personalspaceinvaders.parts.HudFocusablePart;
 import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.TextLabelPart;
@@ -99,7 +101,9 @@ public class MultiplayerScene extends GameSceneBase {
     public MultiplayerBase multiplayerBase = null;
     private MultiplayerState gameState = MultiplayerState.DUMMY;
     private HashMap<MultiplayerState, ArrayList<Entity>> stateEntities = new HashMap<>();
+    
     public boolean havePeerStatus = false;
+    public EndRoundStatusSer endStatus = null;
     
     //special entities (also added in entities array)
     private Entity playerShip;
@@ -251,7 +255,9 @@ public class MultiplayerScene extends GameSceneBase {
                                         " / " + (int)shipStats.maxHitpoints);
             } break;
             case WAIT_PEER: {
-                multiplayerBase.sendStatus();
+                StatsPart shipStats = this.playerShip.get(StatsPart.class);
+                multiplayerBase.sendStatus(shipStats.getCurrentHitpoints(),
+                                            shipStats.maxHitpoints);
                 System.out.println("FINISHED WAVES, WAITING");
                 
                 TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
@@ -287,6 +293,13 @@ public class MultiplayerScene extends GameSceneBase {
                 
             } break;
             case WAIT_PEER: {
+                if (havePeerStatus && endStatus != null) {
+                    String statusText = "";
+                    statusText = "Other player survived. His status: \n" +
+                                    (int)endStatus.currentHitpoints + " / " +
+                                    (int)endStatus.maxHitpoints;
+                    JOptionPane.showMessageDialog(null, statusText);
+                }
                 havePeerStatus = false;
             } break;
             default: {
@@ -303,7 +316,8 @@ public class MultiplayerScene extends GameSceneBase {
         mwmp.haveNewWaves = true;
     }
     
-    public void setPeerStatus() {
+    public void setPeerStatus(EndRoundStatusSer endStatus) {
+        this.endStatus = endStatus;
         
         havePeerStatus = true;
     }

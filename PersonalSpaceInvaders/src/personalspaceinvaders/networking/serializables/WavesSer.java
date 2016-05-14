@@ -7,14 +7,14 @@ import personalspaceinvaders.factories.WavesFactory.WaveType;
  *
  * @author SHerbocopter
  */
-public class WavesSerData extends SerData {
+public class WavesSer extends SerData {
     public ArrayList<WaveType> waveTypes;
     
-    public WavesSerData() {
+    public WavesSer() {
         super();
     }
     
-    public WavesSerData(ArrayList<WaveType> waveTypes) {
+    public WavesSer(ArrayList<WaveType> waveTypes) {
         super();
         
         this.waveTypes = waveTypes;

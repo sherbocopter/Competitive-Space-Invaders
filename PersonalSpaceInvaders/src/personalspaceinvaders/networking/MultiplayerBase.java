@@ -10,8 +10,9 @@ import personalspaceinvaders.Commons;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.Scenes.MultiplayerScene;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
+import personalspaceinvaders.networking.serializables.EndRoundStatusSer;
 import personalspaceinvaders.networking.serializables.Message;
-import personalspaceinvaders.networking.serializables.WavesSerData;
+import personalspaceinvaders.networking.serializables.WavesSer;
 
 /**
  *
@@ -35,15 +36,20 @@ public class MultiplayerBase extends Thread implements Commons {
     public void sendWaves(ArrayList<WaveType> waves) {
         Message message = new Message();
         message.type = Message.MsgType.MSG_WAVES;
-        message.data = new WavesSerData(waves);
+        message.data = new WavesSer(waves);
         
         sendMessage(message);
     }
     
-    public void sendStatus() {
+    public void sendStatus(float currentHitpoints, float maxHitpoints) {
         Message message = new Message();
         message.type = Message.MsgType.MSG_ROUNDRES;
         message.text = "Here's my stats";
+        
+        EndRoundStatusSer endStatus = new EndRoundStatusSer();
+        endStatus.currentHitpoints = currentHitpoints;
+        endStatus.maxHitpoints = maxHitpoints;
+        message.data = endStatus;
         
         sendMessage(message);
     }
@@ -82,11 +88,12 @@ public class MultiplayerBase extends Thread implements Commons {
 
                 switch (message.type) {
                     case MSG_WAVES: {
-                        WavesSerData wavesData = (WavesSerData)message.data;
+                        WavesSer wavesData = (WavesSer)message.data;
                         this.scene.setLocalWaves(wavesData.waveTypes);
                     } break;
                     case MSG_ROUNDRES: {
-                        this.scene.setPeerStatus();
+                        EndRoundStatusSer endStatus = (EndRoundStatusSer) message.data;
+                        this.scene.setPeerStatus(endStatus);
                     } break;
                     default: {
                         
