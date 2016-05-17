@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
@@ -15,6 +17,7 @@ import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.hudUtilities.HudManagerPart;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 import personalspaceinvaders.waveUtilities.WaveManagerPart;
@@ -26,9 +29,9 @@ import personalspaceinvaders.waveUtilities.WaveManagerPart;
 public class TrainingScene extends GameSceneBase {
     private class PushWaveToStackCommand implements Command {
         private WaveType waveType = WaveType.DUMMY;
-        private Scene scene = null;
+        private TrainingScene scene = null;
         
-        public PushWaveToStackCommand(WaveType waveType, Scene scene) {
+        public PushWaveToStackCommand(WaveType waveType, TrainingScene scene) {
             super();
             
             this.scene = scene;
@@ -46,9 +49,9 @@ public class TrainingScene extends GameSceneBase {
     }
     
     private class PopWaveFromQueueCommand implements Command {
-        private Scene scene = null;
+        private TrainingScene scene = null;
         
-        public PopWaveFromQueueCommand(Scene scene) {
+        public PopWaveFromQueueCommand(TrainingScene scene) {
             super();
             
             this.scene = scene;
@@ -62,9 +65,9 @@ public class TrainingScene extends GameSceneBase {
     }
     
     private class SendWavesCommand implements Command {
-        private Scene scene = null;
+        private TrainingScene scene = null;
         
-        public SendWavesCommand(Scene scene) {
+        public SendWavesCommand(TrainingScene scene) {
             super();
             
             this.scene = scene;
@@ -74,14 +77,142 @@ public class TrainingScene extends GameSceneBase {
         public void execute(Object data) {
             WaveManagerPart wmp = scene.controlEntity.get(WaveManagerPart.class);
             wmp.start();
-            //HERE GOES THE SEND WAVES CODE
+            
+            scene.setState(TrainingState.PLAY);
         }
     }
     
+    private enum TrainingState {
+        SELECT_WAVES,
+        PLAY,
+        DUMMY
+    }
+    
+    public TrainingScene() {
+        super();
+    }
+    
+    private TrainingState gameState = TrainingState.DUMMY;
+    private HashMap<TrainingState, ArrayList<Entity>> stateEntities = new HashMap<>();
+    
+//special entities (also added in entities array)
+    private Entity playerShip;
+    private Entity statusLabel;
+    
+    
+        //<editor-fold defaultstate="collapsed" desc="TrainingState utils">
+    private void updateState() {
+        boolean shouldSwitch = checkStateEndCondition(gameState);
+        if (shouldSwitch) {
+            switch (gameState) {
+                case SELECT_WAVES: {
+                    setState(TrainingState.PLAY);
+                } break;
+                case PLAY: {
+                    setState(TrainingState.SELECT_WAVES);
+                } break;
+                default: {
+
+                } break;
+            }
+        }
+    }
+    
+    private boolean checkStateEndCondition(TrainingState state) {
+        try {
+            switch (state) {
+                case SELECT_WAVES: {
+                    
+                } break;
+                case PLAY: {
+                    WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
+                    ArrayList<Entity> aliens = this.stateEntities.get(TrainingState.PLAY);
+                    return (wmp.isFinished == true &&
+                            aliens.isEmpty());
+                }
+                default: {
+
+                } break;
+            }
+        }
+        catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+    
+    private void setState(TrainingState newState) {
+        exitState(gameState);
+        gameState = newState;
+        enterState(gameState);
+    }
+    
+    private void enterState(TrainingState state) {
+        for (Entity entity : stateEntities.get(state)) {
+            entity.setActive(true);
+            entity.setVisible(true);
+        }
+        
+        switch (state) {
+            case SELECT_WAVES: {
+                HudManagerPart hudManager = this.controlEntity.get(HudManagerPart.class);
+                hudManager.setActive(true);
+            } break;
+            case PLAY: {
+                WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
+                
+                wmp.start();
+                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                StatsPart shipStats = this.playerShip.get(StatsPart.class);
+                textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
+                                        " / " + (int)shipStats.maxHitpoints);
+            } break;
+            default: {
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                textLabelPart.setText("Something went wrong...");
+            } break;
+        }
+    }
+    
+    private void exitState(TrainingState state) {
+        for (Entity entity : stateEntities.get(state)) {
+            entity.setActive(false);
+            entity.setVisible(false);
+        }
+        
+        resetStatusLabel();
+        
+        switch (state) {
+            case SELECT_WAVES: {
+                HudManagerPart hudManager = this.controlEntity.get(HudManagerPart.class);
+                hudManager.setActive(false);
+            } break;
+            case PLAY: {
+                
+            } break;
+            default: {
+                
+            } break;
+        }
+    }
+//</editor-fold>
+
+    
     @Override
     public void load() {
-        temporaryEntitiesInit();
+        for (TrainingState state : TrainingState.values()) {
+            stateEntities.put(state, new ArrayList<>());
+        }
+        
+        otherEntitiesInit();
         initWaveSelector();
+        
+        for (TrainingState state : TrainingState.values()) {
+            exitState(state);
+        }
+        
+        setState(TrainingState.SELECT_WAVES);
     }
     
     @Override
@@ -91,6 +222,8 @@ public class TrainingScene extends GameSceneBase {
     
     @Override
     public void update(float delta) {
+        updateState();
+        
         super.update(delta);
     }
     
@@ -99,23 +232,44 @@ public class TrainingScene extends GameSceneBase {
         super.draw(g);
     }
     
-    private void temporaryEntitiesInit() {
-        //WavesFactory wf = WavesFactory.getInstance();
+    @Override
+    public void spawnWave(WaveType type) {
+        WavesFactory wf = WavesFactory.getInstance();
+        
+        ArrayList<Entity> aliens = wf.createWave(type);
+        
+        this.addEntities(aliens);
+        this.stateEntities.get(TrainingState.PLAY).addAll(aliens);
+    }
+    
+    @Override
+    public void removeEntity(Entity entity) {
+        super.removeEntity(entity);
+        
+        ArrayList<Entity> aliens = this.stateEntities.get(TrainingState.PLAY);
+        if (aliens.contains(entity)) {
+            aliens.remove(entity);
+        }
+    }
+    
+    private void otherEntitiesInit() {
         EntityFactory ef = EntityFactory.getInstance();
         
-        //entities.addAll(wf.createWave(WavesFactory.WaveType.WAVE_BASIC_BLOCK));
-        this.addEntity(ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC));
+        //player
+        Entity player = ef.createEntity(EntityFactory.EntityType.PLAYER_BASIC);
+        this.addEntity(player);
+        this.playerShip = player;
         
-        /*
-        WaveManagerPart waveManager = new WaveManagerPart(this);
-        ArrayList<WaveType> waves = new ArrayList<>();
-        waves.add(WaveType.WAVE_BASIC_BLOCK);
-        waves.add(WaveType.WAVE_MIXED_BLOCK);
-        waveManager.setWaves(waves);
-        this.controlEntity.attach(waveManager);
-        waveManager.setActive(true);
-        waveManager.start();
-        */
+        //status label
+        Entity status = ef.createEntity(EntityFactory.EntityType.LABEL_BASIC);
+        TransformPart tpStatus = status.get(TransformPart.class);
+        tpStatus.setX(BOARD_WIDTH - 130);
+        tpStatus.setY(BOARD_HEIGHT / 2);
+        TextLabelPart tlpStatus = status.get(TextLabelPart.class);
+            tlpStatus.setText("");
+            tlpStatus.setColor(Color.WHITE);
+        this.addEntity(status);
+        this.statusLabel = status;
     }
     
     private void initWaveSelector() {
@@ -123,6 +277,7 @@ public class TrainingScene extends GameSceneBase {
             throw new IllegalArgumentException();
         }
         
+        ArrayList<Entity> selectWaveEntities = stateEntities.get(TrainingState.SELECT_WAVES);
         EntityFactory ef = EntityFactory.getInstance();
         
         //<editor-fold defaultstate="collapsed" desc="Buttons">
@@ -137,6 +292,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave1.get(TextLabelPart.class).setText("Basic");
         this.addEntity(buttonWave1);
         buttons.add(buttonWave1.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave1);
         
         Entity buttonWave2 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave2 = buttonWave2.get(TransformPart.class);
@@ -146,6 +302,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave2.get(TextLabelPart.class).setText("Mixed");
         this.addEntity(buttonWave2);
         buttons.add(buttonWave2.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave2);
         
         Entity buttonWave3 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave3 = buttonWave3.get(TransformPart.class);
@@ -155,6 +312,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave3.get(TextLabelPart.class).setText("Basic");
         this.addEntity(buttonWave3);
         buttons.add(buttonWave3.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave3);
         
         Entity buttonWave4 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave4 = buttonWave4.get(TransformPart.class);
@@ -164,6 +322,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave4.get(TextLabelPart.class).setText("Mixed");
         this.addEntity(buttonWave4);
         buttons.add(buttonWave4.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave4);
         
         Entity buttonWave5 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave5 = buttonWave5.get(TransformPart.class);
@@ -173,6 +332,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave5.get(TextLabelPart.class).setText("Basic");
         this.addEntity(buttonWave5);
         buttons.add(buttonWave5.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave5);
         
         Entity buttonWave6 = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpWave6 = buttonWave6.get(TransformPart.class);
@@ -182,6 +342,7 @@ public class TrainingScene extends GameSceneBase {
         buttonWave6.get(TextLabelPart.class).setText("Mixed");
         this.addEntity(buttonWave6);
         buttons.add(buttonWave6.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonWave6);
         
         Entity buttonClear = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpClear = buttonClear.get(TransformPart.class);
@@ -191,6 +352,7 @@ public class TrainingScene extends GameSceneBase {
         buttonClear.get(TextLabelPart.class).setText("Delete");
         this.addEntity(buttonClear);
         buttons.add(buttonClear.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonClear);
         
         Entity buttonSelect = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpSelect = buttonSelect.get(TransformPart.class);
@@ -200,6 +362,7 @@ public class TrainingScene extends GameSceneBase {
         buttonSelect.get(TextLabelPart.class).setText("Select");
         this.addEntity(buttonSelect);
         buttons.add(buttonSelect.get(HudFocusablePart.class));
+        selectWaveEntities.add(buttonSelect);
         
         for (int i = 0; i < buttons.size(); ++i) {
             HudFocusablePart focusable = buttons.get(i);
@@ -219,6 +382,7 @@ public class TrainingScene extends GameSceneBase {
         tlpTitleLabel.setText("Select waves");
         tlpTitleLabel.setColor(Color.WHITE);
         this.addEntity(titleLabel);
+        selectWaveEntities.add(titleLabel);
         
         Entity wavesLabel = ef.createEntity(EntityFactory.EntityType.LABEL_BASIC);
         TransformPart tpWavesLabel = wavesLabel.get(TransformPart.class);
@@ -229,11 +393,19 @@ public class TrainingScene extends GameSceneBase {
         tlpWavesLabel.setText("Normal Block Wave\nMixed Block Wave\nNormal Block Wave\nMixed Block Wave");
         tlpWavesLabel.setColor(Color.WHITE);
         this.addEntity(wavesLabel);
+        selectWaveEntities.add(wavesLabel);
         
         //WaveManager
         WaveManagerPart waveManager = new WaveManagerPart(this);
         waveManager.setOutputLabel(tlpWavesLabel);
         this.controlEntity.attach(waveManager);
         waveManager.setActive(true);
+    }
+    
+    private void resetStatusLabel() {
+        if (this.statusLabel != null) {
+            TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+            textLabelPart.setText("");
+        }
     }
 }

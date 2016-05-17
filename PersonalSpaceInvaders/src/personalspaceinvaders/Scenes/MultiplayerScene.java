@@ -316,20 +316,10 @@ public class MultiplayerScene extends GameSceneBase {
     
     @Override
     public void load() {
-        if (isHost) {
-            multiplayerBase.start();
-
-            initialize();
-
-            setState(MultiplayerState.WAIT_CONNECTION);
-        }
-        else {
-            multiplayerBase.start();
-
-            initialize();
-
-            setState(MultiplayerState.WAIT_CONNECTION);
-        }
+        multiplayerBase.start();
+        initialize();
+        
+        setState(MultiplayerState.WAIT_CONNECTION);
     }
     
     @Override
