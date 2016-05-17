@@ -115,25 +115,16 @@ public class MultiplayerScene extends GameSceneBase {
         this.isHost = true;
         multiplayerBase = new MultiplayerHost(this);
         multiplayerBase.isHost = true;
-        multiplayerBase.start();
-        
-        initialize();
-        
-        setState(MultiplayerState.WAIT_CONNECTION);
     }
     
     public MultiplayerScene(String ipAddress, int port) {
         super();
         
+        this.isHost = false;
         this.hostIp = ipAddress;
         this.hostPort = port;
-        multiplayerBase = new MultiplayerGuest(this, ipAddress, port);
+        multiplayerBase = new MultiplayerGuest(this, this.hostIp, this.hostPort);
         multiplayerBase.isHost = false;
-        multiplayerBase.start();
-        
-        initialize();
-        
-        setState(MultiplayerState.WAIT_CONNECTION);
     }
     
     private void initialize() {
@@ -325,7 +316,20 @@ public class MultiplayerScene extends GameSceneBase {
     
     @Override
     public void load() {
-        
+        if (isHost) {
+            multiplayerBase.start();
+
+            initialize();
+
+            setState(MultiplayerState.WAIT_CONNECTION);
+        }
+        else {
+            multiplayerBase.start();
+
+            initialize();
+
+            setState(MultiplayerState.WAIT_CONNECTION);
+        }
     }
     
     @Override

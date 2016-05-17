@@ -3,9 +3,7 @@ package personalspaceinvaders;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.util.ArrayList;
 import javax.swing.JPanel;
-import personalspaceinvaders.Scenes.TrainingScene;
 import personalspaceinvaders.Scenes.MainMenuScene;
 
 /**
