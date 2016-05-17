@@ -3,6 +3,7 @@ package personalspaceinvaders;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.StatsPart.Faction;
@@ -13,7 +14,7 @@ import personalspaceinvaders.parts.StatsPart.Faction;
  * http://rivermanmedia.com/object-oriented-game-programming-the-scene-system/
  */
 public abstract class Scene implements Commons {
-    protected ArrayList<Entity> entities = new ArrayList<>(300);
+    protected CopyOnWriteArrayList<Entity> entities = new CopyOnWriteArrayList<>();
     protected ArrayList<Entity> entitiesToAdd = new ArrayList<>(300);
     protected ArrayList<Entity> entitiesToRemove = new ArrayList<>(300);
     public Entity controlEntity = new Entity();
