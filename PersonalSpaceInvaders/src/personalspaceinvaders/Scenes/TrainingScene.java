@@ -3,6 +3,7 @@ package personalspaceinvaders.Scenes;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JComponent;
@@ -10,12 +11,15 @@ import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
 import personalspaceinvaders.Scene;
+import personalspaceinvaders.behaviours.CommandOnKeyBehaviour;
+import personalspaceinvaders.commands.ExitToMainMenuCommand;
 import personalspaceinvaders.factories.EntityFactory;
 import personalspaceinvaders.factories.HudFactory;
 import personalspaceinvaders.factories.HudFactory.HudType;
 import personalspaceinvaders.factories.WavesFactory;
 import personalspaceinvaders.factories.WavesFactory.WaveType;
 import personalspaceinvaders.hudUtilities.HudManagerPart;
+import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HudFocusablePart;
 import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.TextLabelPart;
@@ -100,7 +104,7 @@ public class TrainingScene extends GameSceneBase {
     private Entity statusLabel;
     
     
-        //<editor-fold defaultstate="collapsed" desc="TrainingState utils">
+    //<editor-fold defaultstate="collapsed" desc="TrainingState utils">
     private void updateState() {
         boolean shouldSwitch = checkStateEndCondition(gameState);
         if (shouldSwitch) {
@@ -205,6 +209,7 @@ public class TrainingScene extends GameSceneBase {
             stateEntities.put(state, new ArrayList<>());
         }
         
+        initSceneController();
         otherEntitiesInit();
         initWaveSelector();
         
@@ -407,5 +412,15 @@ public class TrainingScene extends GameSceneBase {
             TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
             textLabelPart.setText("");
         }
+    }
+    
+    private void initSceneController() {
+        ControllerPart sceneController = new ControllerPart();
+            CommandOnKeyBehaviour cokb =
+                    new CommandOnKeyBehaviour(KeyEvent.VK_ESCAPE,
+                            new ExitToMainMenuCommand(), true);
+            sceneController.attach(cokb);
+        sceneController.setActive(true);
+        this.controlEntity.attach(sceneController);
     }
 }

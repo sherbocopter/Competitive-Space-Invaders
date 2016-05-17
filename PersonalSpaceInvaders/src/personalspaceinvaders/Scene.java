@@ -2,6 +2,7 @@ package personalspaceinvaders;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 import personalspaceinvaders.parts.HitboxPart;

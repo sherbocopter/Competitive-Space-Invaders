@@ -24,13 +24,18 @@ public class KeyboardManager implements KeyListener {
     private KeyboardManager() {
         currentKeys = new boolean[KEY_COUNT];
         keys = new KeyState[KEY_COUNT];
-        for (int i = 0; i < KEY_COUNT; ++i) {
-            keys[i] = KeyState.RELEASED;
-        }
+        resetKeyboardManager();
     }
     
     public static KeyboardManager getInstance() {
         return instance;
+    }
+    
+    public synchronized void resetKeyboardManager() {
+        for (int i = 0; i < KEY_COUNT; ++i) {
+            keys[i] = KeyState.RELEASED;
+            currentKeys[i] = false;
+        }
     }
     
     public synchronized void poll() {
