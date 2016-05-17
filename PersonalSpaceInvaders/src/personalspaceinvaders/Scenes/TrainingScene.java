@@ -1,18 +1,16 @@
 package personalspaceinvaders.Scenes;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
-import personalspaceinvaders.Scene;
+import personalspaceinvaders.KeyboardManager;
+import personalspaceinvaders.SceneManager;
 import personalspaceinvaders.behaviours.CommandOnKeyBehaviour;
-import personalspaceinvaders.commands.ExitToMainMenuCommand;
 import personalspaceinvaders.factories.EntityFactory;
 import personalspaceinvaders.factories.HudFactory;
 import personalspaceinvaders.factories.HudFactory.HudType;
@@ -22,6 +20,7 @@ import personalspaceinvaders.hudUtilities.HudManagerPart;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HudFocusablePart;
 import personalspaceinvaders.parts.StatsPart;
+import personalspaceinvaders.parts.StatsPart.StatsType;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
 import personalspaceinvaders.waveUtilities.WaveManagerPart;
@@ -31,6 +30,30 @@ import personalspaceinvaders.waveUtilities.WaveManagerPart;
  * @author SHerbocopter
  */
 public class TrainingScene extends GameSceneBase {
+    public class ExitToMainMenuCommand implements Command {
+        private TrainingScene scene = null;
+                
+        public ExitToMainMenuCommand(TrainingScene scene) {
+            this.scene = scene;
+        }
+
+        @Override
+        public void execute(Object data) {
+            int reply = JOptionPane.showConfirmDialog(null, "Exit to main menu?", "", JOptionPane.YES_NO_OPTION);
+
+            if (reply == JOptionPane.OK_OPTION) {
+                SceneManager sm = SceneManager.getInstance();
+
+                sm.changeScene(new MainMenuScene());
+            }
+            
+            KeyboardManager km = KeyboardManager.getInstance();
+            km.resetKeyboardManager();
+            
+            scene.setState(TrainingState.PAUSE);
+        }
+    }
+    
     private class PushWaveToStackCommand implements Command {
         private WaveType waveType = WaveType.DUMMY;
         private TrainingScene scene = null;
@@ -89,6 +112,7 @@ public class TrainingScene extends GameSceneBase {
     private enum TrainingState {
         SELECT_WAVES,
         PLAY,
+        PAUSE,
         DUMMY
     }
     
@@ -97,6 +121,7 @@ public class TrainingScene extends GameSceneBase {
     }
     
     private TrainingState gameState = TrainingState.DUMMY;
+    private TrainingState previousGameState = TrainingState.DUMMY;
     private HashMap<TrainingState, ArrayList<Entity>> stateEntities = new HashMap<>();
     
 //special entities (also added in entities array)
@@ -106,6 +131,11 @@ public class TrainingScene extends GameSceneBase {
     
     //<editor-fold defaultstate="collapsed" desc="TrainingState utils">
     private void updateState() {
+        if (checkIfShouldPause()) {
+            setState(TrainingState.PAUSE);
+            return;
+        }
+        
         boolean shouldSwitch = checkStateEndCondition(gameState);
         if (shouldSwitch) {
             switch (gameState) {
@@ -115,11 +145,27 @@ public class TrainingScene extends GameSceneBase {
                 case PLAY: {
                     setState(TrainingState.SELECT_WAVES);
                 } break;
+                case PAUSE: {
+                    setState(previousGameState);
+                }
                 default: {
 
                 } break;
             }
         }
+    }
+    
+    private boolean checkIfShouldPause() {
+        if (gameState == TrainingState.PAUSE) {
+            return false;
+        }
+        
+        KeyboardManager km = KeyboardManager.getInstance();
+        
+        if (km.keyDownOnce(KEY_PAUSE)) {
+            return true;
+        }
+        return false;
     }
     
     private boolean checkStateEndCondition(TrainingState state) {
@@ -134,6 +180,11 @@ public class TrainingScene extends GameSceneBase {
                     return (wmp.isFinished == true &&
                             aliens.isEmpty());
                 }
+                case PAUSE: {
+                    KeyboardManager km = KeyboardManager.getInstance();
+                    
+                    return (km.keyDownOnce(KEY_PAUSE));
+                }
                 default: {
 
                 } break;
@@ -147,6 +198,7 @@ public class TrainingScene extends GameSceneBase {
     
     private void setState(TrainingState newState) {
         exitState(gameState);
+        previousGameState = gameState;
         gameState = newState;
         enterState(gameState);
     }
@@ -163,14 +215,26 @@ public class TrainingScene extends GameSceneBase {
                 hudManager.setActive(true);
             } break;
             case PLAY: {
-                WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
-                
-                wmp.start();
+                if (previousGameState != TrainingState.PAUSE) {
+                    WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
+
+                    wmp.start();
+                }
                 
                 TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
                 StatsPart shipStats = this.playerShip.get(StatsPart.class);
                 textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
                                         " / " + (int)shipStats.maxHitpoints);
+            } break;
+            case PAUSE: {
+                WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
+                wmp.pause();
+                
+                playerShip.setActive(false);
+                
+                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+                StatsPart shipStats = this.playerShip.get(StatsPart.class);
+                textLabelPart.setText("Game paused.\nPress unpause key\nto resume");
             } break;
             default: {
                 TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
@@ -195,6 +259,12 @@ public class TrainingScene extends GameSceneBase {
             case PLAY: {
                 
             } break;
+            case PAUSE: {
+                WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
+                wmp.unpause();
+                
+                playerShip.setActive(true);
+            }
             default: {
                 
             } break;
@@ -418,7 +488,7 @@ public class TrainingScene extends GameSceneBase {
         ControllerPart sceneController = new ControllerPart();
             CommandOnKeyBehaviour cokb =
                     new CommandOnKeyBehaviour(KeyEvent.VK_ESCAPE,
-                            new ExitToMainMenuCommand(), true);
+                            new ExitToMainMenuCommand(this), true);
             sceneController.attach(cokb);
         sceneController.setActive(true);
         this.controlEntity.attach(sceneController);

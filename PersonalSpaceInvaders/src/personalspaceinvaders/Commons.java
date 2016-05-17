@@ -1,6 +1,7 @@
 package personalspaceinvaders;
 
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -22,4 +23,7 @@ public interface Commons {
     public static final int MULTIPLAYER_PORT = 9093;
     public static final int POLLING_TIME = 2000;
     public static final int POLLING_TRIES = 10;
+    
+    public static final int KEY_EXIT_TO_MENU = KeyEvent.VK_ESCAPE;
+    public static final int KEY_PAUSE = KeyEvent.VK_P;
 }

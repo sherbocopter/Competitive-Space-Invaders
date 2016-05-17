@@ -22,6 +22,7 @@ public class WaveManagerPart extends Part implements Commons {
     private int maxCapacity = MAX_WAVES;
     private TextLabelPart outputLabel = null;
     public boolean isFinished = true;
+    private boolean isPaused = false;
     
     public WaveManagerPart(GameSceneBase managedScene) {
         this.managedScene = managedScene;
@@ -67,6 +68,14 @@ public class WaveManagerPart extends Part implements Commons {
         prepareNextWave();
     }
     
+    public void pause() {
+        this.isPaused = true;
+    }
+    
+    public void unpause() {
+        this.isPaused = false;
+    }
+    
     private void prepareNextWave() {
         waveCounter++;
         if (waveCounter >= waves.size()) {
@@ -95,7 +104,7 @@ public class WaveManagerPart extends Part implements Commons {
             outputLabel.setText(formatWaveList());
         }
         
-        if (waveCounter < 0) {
+        if (waveCounter < 0 || isPaused) {
             return;
         }
         
