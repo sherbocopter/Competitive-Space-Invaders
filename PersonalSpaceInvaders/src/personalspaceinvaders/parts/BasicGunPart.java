@@ -24,7 +24,7 @@ public class BasicGunPart extends Part {
         this.yOffset = yOffset;
     }
     
-//<editor-fold defaultstate="collapsed" desc="Getters + Setters">
+    //<editor-fold defaultstate="collapsed" desc="Getters + Setters">
     public float getXOffset() {
         return xOffset;
     }

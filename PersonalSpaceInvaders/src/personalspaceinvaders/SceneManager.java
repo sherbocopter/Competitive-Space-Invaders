@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import javax.swing.JPanel;
 import personalspaceinvaders.Scenes.MainMenuScene;
+import personalspaceinvaders.spriteUtilities.SpriteManager;
 
 /**
  *
@@ -25,6 +26,9 @@ public class SceneManager extends JPanel implements Runnable, Commons {
     
     private SceneManager() {
         init();
+        
+        //LOAD RESOURCES
+        SpriteManager.getInstance();
     }
     
     private void init() {

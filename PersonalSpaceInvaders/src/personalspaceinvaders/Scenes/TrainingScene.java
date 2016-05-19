@@ -39,6 +39,8 @@ public class TrainingScene extends GameSceneBase {
 
         @Override
         public void execute(Object data) {
+            scene.setState(TrainingState.PAUSE);
+            
             int reply = JOptionPane.showConfirmDialog(null, "Exit to main menu?", "", JOptionPane.YES_NO_OPTION);
 
             if (reply == JOptionPane.OK_OPTION) {
@@ -49,8 +51,6 @@ public class TrainingScene extends GameSceneBase {
             
             KeyboardManager km = KeyboardManager.getInstance();
             km.resetKeyboardManager();
-            
-            scene.setState(TrainingState.PAUSE);
         }
     }
     

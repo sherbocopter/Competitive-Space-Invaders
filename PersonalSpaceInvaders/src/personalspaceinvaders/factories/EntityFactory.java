@@ -15,11 +15,13 @@ import personalspaceinvaders.parts.BasicGunPart;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.SpritePart;
 import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.StatsPart.Faction;
 import personalspaceinvaders.parts.StatsPart.StatsType;
 import personalspaceinvaders.parts.TextLabelPart;
 import personalspaceinvaders.parts.TransformPart;
+import personalspaceinvaders.spriteUtilities.SpriteManager;
 
 /**
  *
@@ -94,13 +96,22 @@ public class EntityFactory implements Commons {
         shipStats.damage = 50;
         shipStats.setActive(true);
         alien.attach(shipStats);
+
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("alien1"),
+                                            -25, -15, 0, 50, 30);
+        sprite.setVisible(true);
+        alien.attach(sprite);
         
         //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -15, 0, 50, 30);
         hitbox.setColor(Color.WHITE);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         hitbox.setActive(true);
         alien.attach(hitbox);
+        
+
         
         //controller
         ControllerPart controller = new ControllerPart();
@@ -139,10 +150,17 @@ public class EntityFactory implements Commons {
         shipStats.setActive(true);
         alien.attach(shipStats);
         
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("alien2"),
+                                            -25, -20, 0, 50, 40);
+        sprite.setVisible(true);
+        alien.attach(sprite);
+        
         //hitbox
         HitboxPart hitbox = new HitboxPart(-25, -20, 0, 50, 40);
         hitbox.setColor(Color.RED);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         hitbox.setActive(true);
         alien.attach(hitbox);
         
@@ -178,10 +196,17 @@ public class EntityFactory implements Commons {
         shipStats.setActive(true);
         alien.attach(shipStats);
         
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("alien3"),
+                                            -20, -10, 0, 40, 20);
+        sprite.setVisible(true);
+        alien.attach(sprite);
+        
         //hitbox
         HitboxPart hitbox = new HitboxPart(-20, -10, 0, 40, 20);
         hitbox.setColor(Color.GREEN);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         hitbox.setActive(true);
         alien.attach(hitbox);
         
@@ -217,10 +242,17 @@ public class EntityFactory implements Commons {
         shipStats.setActive(true);
         player.attach(shipStats);
         
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("playerShip"),
+                                            -30, -20, 0, 60, 40);
+        sprite.setVisible(true);
+        player.attach(sprite);
+        
         //hitbox
         HitboxPart hitbox = new HitboxPart(-30, -20, 0, 60, 40);
         hitbox.setColor(Color.BLUE);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         hitbox.setActive(true);
         player.attach(hitbox);
         
@@ -286,10 +318,17 @@ public class EntityFactory implements Commons {
         
         bullet.attach(new TransformPart(0, 0, 0, 1));
         
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("bullet1"),
+                                            -3, -5, 0, 6, 13);
+        sprite.setVisible(true);
+        bullet.attach(sprite);
+        
         //hitbox
-        HitboxPart hitbox = new HitboxPart(-3, -3, 0, 6, 6);
+        HitboxPart hitbox = new HitboxPart(-3, -5, 0, 6, 10);
         hitbox.setColor(Color.GREEN);
-        hitbox.setVisible(true);
+        hitbox.setVisible(false);
         hitbox.setActive(true);
         bullet.attach(hitbox);
         
@@ -304,7 +343,7 @@ public class EntityFactory implements Commons {
         
         //controller
         ControllerPart controller = new ControllerPart();
-            FlyUpBehaviour flyUp = new FlyUpBehaviour(300);
+            FlyUpBehaviour flyUp = new FlyUpBehaviour(350);
             controller.attach(flyUp);
             
             DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
