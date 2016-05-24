@@ -113,6 +113,7 @@ public class TrainingScene extends GameSceneBase {
         SELECT_WAVES,
         PLAY,
         PAUSE,
+        DIED,
         DUMMY
     }
     
@@ -143,7 +144,13 @@ public class TrainingScene extends GameSceneBase {
                     setState(TrainingState.PLAY);
                 } break;
                 case PLAY: {
-                    setState(TrainingState.SELECT_WAVES);
+                    StatsPart playerStats = playerShip.get(StatsPart.class);
+                    if (playerStats.getCurrentHitpoints() <= 0) {
+                        setState(TrainingState.DIED);
+                    }
+                    else {
+                        setState(TrainingState.SELECT_WAVES);
+                    }
                 } break;
                 case PAUSE: {
                     setState(previousGameState);
@@ -177,8 +184,11 @@ public class TrainingScene extends GameSceneBase {
                 case PLAY: {
                     WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
                     ArrayList<Entity> aliens = this.stateEntities.get(TrainingState.PLAY);
+                    StatsPart playerStats = playerShip.get(StatsPart.class);
+                    
                     return (wmp.isFinished == true &&
-                            aliens.isEmpty());
+                            aliens.isEmpty()) ||
+                            playerStats.getCurrentHitpoints() <= 0;
                 }
                 case PAUSE: {
                     KeyboardManager km = KeyboardManager.getInstance();
@@ -220,11 +230,6 @@ public class TrainingScene extends GameSceneBase {
 
                     wmp.start();
                 }
-                
-                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
-                StatsPart shipStats = this.playerShip.get(StatsPart.class);
-                textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
-                                        " / " + (int)shipStats.maxHitpoints);
             } break;
             case PAUSE: {
                 WaveManagerPart wmp = this.controlEntity.get(WaveManagerPart.class);
@@ -235,6 +240,15 @@ public class TrainingScene extends GameSceneBase {
                 TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
                 StatsPart shipStats = this.playerShip.get(StatsPart.class);
                 textLabelPart.setText("Game paused.\nPress unpause key\nto resume");
+            } break;
+            case DIED: {
+                SceneManager sm = SceneManager.getInstance();
+                
+                JOptionPane.showMessageDialog(null, "You died. Training id over.");
+                KeyboardManager km = KeyboardManager.getInstance();
+                km.resetKeyboardManager();
+                
+                sm.changeScene(new MainMenuScene());
             } break;
             default: {
                 TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
@@ -298,6 +312,7 @@ public class TrainingScene extends GameSceneBase {
     @Override
     public void update(float delta) {
         updateState();
+        updateStatusBar();
         
         super.update(delta);
     }
@@ -475,6 +490,15 @@ public class TrainingScene extends GameSceneBase {
         waveManager.setOutputLabel(tlpWavesLabel);
         this.controlEntity.attach(waveManager);
         waveManager.setActive(true);
+    }
+    
+    private void updateStatusBar() {
+        if (this.gameState == TrainingState.PLAY) {
+            TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+            StatsPart shipStats = this.playerShip.get(StatsPart.class);
+            textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
+                                    " / " + (int)shipStats.maxHitpoints);
+        }
     }
     
     private void resetStatusLabel() {

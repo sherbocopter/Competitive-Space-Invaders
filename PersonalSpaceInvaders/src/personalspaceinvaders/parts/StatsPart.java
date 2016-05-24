@@ -69,7 +69,6 @@ public class StatsPart extends Part{
             
             if (invulnerablePassed > invulnerableTime) {
                 isInvulnerable = false;
-                System.out.println("no more invulnerability");
             }
         }
     }
