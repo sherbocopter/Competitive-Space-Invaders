@@ -10,6 +10,8 @@ import java.util.HashMap;
 public class SpriteManager {
     private static SpriteManager instance = new SpriteManager();
     private SpriteManager() {
+        putSprite("mainMenuBanner", "res/sprites/banner.png");
+        
         putSprite("playerShip", "res/sprites/player_ship.png");
         putSprite("alien1",     "res/sprites/alien1.png");
         putSprite("alien2",     "res/sprites/alien2.png");

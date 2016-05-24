@@ -46,7 +46,8 @@ public class EntityFactory implements Commons {
         PLAYER_BASIC,
         BUTTON_BASIC,
         LABEL_BASIC,
-        BULLET_BASIC
+        BULLET_BASIC,
+        MAINMENU_BANNER
     }
     
     public Entity createEntity(EntityType type) {
@@ -73,6 +74,9 @@ public class EntityFactory implements Commons {
             } break;
             case BULLET_BASIC: {
                 entity = createBasicBullet();
+            } break;
+            case MAINMENU_BANNER: {
+                entity = createMainMenuBanner();
             } break;
             default: {
                 throw new IllegalArgumentException("entityType not found");
@@ -261,7 +265,7 @@ public class EntityFactory implements Commons {
         player.attach(hitbox);
         
         //basicGun
-        BasicGunPart gunPart = new BasicGunPart(0, -30);
+        BasicGunPart gunPart = new BasicGunPart(0, -33);
         gunPart.setShootKey(KeyEvent.VK_SPACE);
         gunPart.setShootDelay((float) 0.3);
         gunPart.setActive(true);
@@ -289,13 +293,13 @@ public class EntityFactory implements Commons {
         Font font = FONT_DEFAULT;
         TextLabelPart textLabel = new TextLabelPart(font, -100, -20, 0, 200, 40);
         textLabel.setVisible(true);
-        textLabel.setColor(Color.YELLOW);
+        textLabel.setColor(COLOR_BUTTON);
         button.attach(textLabel);
         
         //focusable
         HudFocusablePart focusable = new HudFocusablePart(-100, -20, 0, 200, 40);
         focusable.setHighlightWidth(4);
-        focusable.setColor(Color.WHITE);
+        focusable.setColor(COLOR_HIGHLIGHT);
         focusable.setVisible(true);
         button.attach(focusable);
         
@@ -357,5 +361,20 @@ public class EntityFactory implements Commons {
         bullet.attach(controller);
         
         return bullet;
+    }
+    
+    private Entity createMainMenuBanner() {
+        Entity banner = new Entity();
+        
+        banner.attach(new TransformPart(0, 0, 0, 1));
+        
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("mainMenuBanner"),
+                                            -200, -134, 0, 400, 268);
+        sprite.setVisible(true);
+        banner.attach(sprite);
+        
+        return banner;
     }
 }

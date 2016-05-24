@@ -1,5 +1,6 @@
 package personalspaceinvaders;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 
@@ -19,8 +20,11 @@ public interface Commons {
     public static final Font FONT_DEFAULT = new Font("Impact", Font.PLAIN, 20);
     public static final Font FONT_SMALL = new Font("Impact", Font.PLAIN, 15);
     
+    public static final Color COLOR_BUTTON = new Color(0xB34FFF);
+    public static final Color COLOR_HIGHLIGHT = new Color(0x78D685);
+    
     public static final int MAX_WAVES = 5;
-    public static final int MAX_ROUNDS = 2;
+    public static final int MAX_ROUNDS = 3;
     
     public static final int MULTIPLAYER_PORT = 9093;
     public static final int POLLING_TIME = 2000;

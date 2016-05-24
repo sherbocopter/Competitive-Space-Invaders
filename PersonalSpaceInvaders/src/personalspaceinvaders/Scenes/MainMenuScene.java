@@ -79,8 +79,8 @@ public class MainMenuScene extends Scene {
         
         Entity buttonTraining = ef.createEntity(EntityFactory.EntityType.BUTTON_BASIC);
         TransformPart tpTraining = buttonTraining.get(TransformPart.class);
-        tpTraining.setY(120);
-        tpTraining.setX(BOARD_WIDTH / 2);
+        tpTraining.setY(170);
+        tpTraining.setX(BOARD_WIDTH / 4);
         buttonTraining.get(HudFocusablePart.class).setCommand(new NewTrainingCommand());
         buttonTraining.get(TextLabelPart.class).setText("Training");
         focusables.add(buttonTraining.get(HudFocusablePart.class));
@@ -123,5 +123,11 @@ public class MainMenuScene extends Scene {
         
         this.controlEntity.attach(hf.createHud(HudFactory.HudType.MAIN_MENU, focusables));
         //0090.addEntity(alfieSuperCuts); what
+        
+        Entity banner = ef.createEntity(EntityFactory.EntityType.MAINMENU_BANNER);
+        TransformPart tpBanner = banner.get(TransformPart.class);
+        tpBanner.setX(BOARD_WIDTH * 3 / 4);
+        tpBanner.setY(BOARD_HEIGHT / 2);
+        this.addEntity(banner);
     }
 }
