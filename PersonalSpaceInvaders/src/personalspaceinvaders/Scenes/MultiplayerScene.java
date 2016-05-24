@@ -7,6 +7,8 @@ import java.util.HashMap;
 import javax.swing.JOptionPane;
 import personalspaceinvaders.Command;
 import personalspaceinvaders.Entity;
+import personalspaceinvaders.KeyboardManager;
+import personalspaceinvaders.SceneManager;
 import personalspaceinvaders.factories.EntityFactory;
 import personalspaceinvaders.factories.HudFactory;
 import personalspaceinvaders.factories.HudFactory.HudType;
@@ -100,6 +102,9 @@ public class MultiplayerScene extends GameSceneBase {
     
     public boolean havePeerStatus = false;
     public EndRoundStatusSer endStatus = null;
+    
+    public int maxRounds = MAX_ROUNDS;
+    public int currentRound = 0;
     
     //special entities (also added in entities array)
     private Entity playerShip;
@@ -235,11 +240,7 @@ public class MultiplayerScene extends GameSceneBase {
                 MultiplayerWaveManagerPart mwmp = this.controlEntity.get(MultiplayerWaveManagerPart.class);
                 mwmp.haveNewWaves = false;
                 mwmp.localEncounter.start();
-                
-                TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
-                StatsPart shipStats = this.playerShip.get(StatsPart.class);
-                textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
-                                        " / " + (int)shipStats.maxHitpoints);
+                currentRound++;
             } break;
             case WAIT_PEER: {
                 StatsPart shipStats = this.playerShip.get(StatsPart.class);
@@ -281,11 +282,50 @@ public class MultiplayerScene extends GameSceneBase {
             } break;
             case WAIT_PEER: {
                 if (havePeerStatus && endStatus != null) {
-                    String statusText = "";
-                    statusText = "Other player survived. His status: \n" +
-                                    (int)endStatus.currentHitpoints + " / " +
-                                    (int)endStatus.maxHitpoints;
-                    JOptionPane.showMessageDialog(null, statusText);
+                    StatsPart playerStats = playerShip.get(StatsPart.class);
+                    if (playerStats.getCurrentHitpoints() > 0) {
+                        if (endStatus.currentHitpoints > 0) {
+                            if (currentRound >= maxRounds) {
+                                String statusText = "";
+                                statusText = "Both you and the other player survived for " + maxRounds +
+                                            ". It's a draw!";
+                                JOptionPane.showMessageDialog(null, statusText);
+                                goToMainMenu();
+                            }
+                            else {
+                                String statusText = "";
+                                statusText = "Other player also survived. His status: \n" +
+                                                (int)endStatus.currentHitpoints + " / " +
+                                                (int)endStatus.maxHitpoints;
+                                JOptionPane.showMessageDialog(null, statusText);
+                            }
+                        }
+                        else {
+                            String statusText = "";
+                            statusText = "Other player died, but you survived. You won!";
+                            JOptionPane.showMessageDialog(null, statusText);
+                            goToMainMenu();
+                        }
+                    }
+                    else {
+                        if (endStatus.currentHitpoints > 0) {
+                            String statusText = "";
+                            statusText = "Other player survived. His status: \n" +
+                                            (int)endStatus.currentHitpoints + " / " +
+                                            (int)endStatus.maxHitpoints +
+                                            "\nYou lost!";
+                            JOptionPane.showMessageDialog(null, statusText);
+                            goToMainMenu();
+                        }
+                        else {
+                            String statusText = "";
+                            statusText = "Other player also died. It's a draw!";
+                            JOptionPane.showMessageDialog(null, statusText);
+                            goToMainMenu();
+                        }
+                    }
+                    
+                    
                 }
                 havePeerStatus = false;
             } break;
@@ -326,6 +366,7 @@ public class MultiplayerScene extends GameSceneBase {
     @Override
     public void update(float delta) {
         updateState();
+        updateStatusBar();
         
         super.update(delta);
     }
@@ -507,10 +548,25 @@ public class MultiplayerScene extends GameSceneBase {
         multplayerWaveManager.setActive(true);
     }
     
+    private void updateStatusBar() {
+        if (this.gameState == MultiplayerState.PLAY) {
+            TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
+            StatsPart shipStats = this.playerShip.get(StatsPart.class);
+            textLabelPart.setText("HP: " + (int)shipStats.getCurrentHitpoints() +
+                                    " / " + (int)shipStats.maxHitpoints +
+                                    "\nRound: " + currentRound + " / " + maxRounds);
+        }
+    }
+    
     private void resetStatusLabel() {
         if (this.statusLabel != null) {
             TextLabelPart textLabelPart = this.statusLabel.get(TextLabelPart.class);
             textLabelPart.setText("");
         }
+    }
+    
+    private void goToMainMenu() {
+        KeyboardManager.getInstance().resetKeyboardManager();
+        SceneManager.getInstance().changeScene(new MainMenuScene());
     }
 }
