@@ -23,6 +23,10 @@ public class StatsPart extends Part{
     public Faction faction = Faction.FACTION_FRIENDLY;
     public StatsType statsType = StatsType.SHIP;
     public boolean isInvulnerable = false;
+    public float invulnerableTime = -1;
+    private float invulnerablePassed = 0;
+    private boolean shouldDie = false;
+    private boolean shouldInvulnerable = false;
     
     public void setCurrentHitpoints(float currentHitpoints) {
         this.currentHitpoints = currentHitpoints;
@@ -33,9 +37,40 @@ public class StatsPart extends Part{
     }
     
     public void inflictDamage(float inflictedDamage) {
+        if (isInvulnerable || shouldInvulnerable) {
+            return;
+        }
+        
         this.currentHitpoints -= inflictedDamage;
         if (currentHitpoints <= 0) {
+            shouldDie = true;
+        }
+        
+        if (invulnerableTime > 0 && !isInvulnerable) {
+            invulnerablePassed = 0;
+            shouldInvulnerable = true;
+        }
+    }
+    
+    @Override
+    public void update(float delta) {
+        if (shouldDie) {
             this.entity.die();
+            return;
+        }
+        
+        if (shouldInvulnerable) {
+            isInvulnerable = true;
+            shouldInvulnerable = false;
+        }
+        
+        if (isInvulnerable && invulnerableTime > 0) {
+            invulnerablePassed += delta;
+            
+            if (invulnerablePassed > invulnerableTime) {
+                isInvulnerable = false;
+                System.out.println("no more invulnerability");
+            }
         }
     }
 }

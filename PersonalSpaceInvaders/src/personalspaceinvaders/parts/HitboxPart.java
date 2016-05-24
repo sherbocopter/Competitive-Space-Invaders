@@ -98,12 +98,6 @@ public class HitboxPart extends Part {
         TransformPart tp = this.entity.get(TransformPart.class);
         StatsPart stats = this.entity.get(StatsPart.class);
         
-        //TEMPORARY
-        if (stats.statsType != StatsType.BULLET)
-            return;
-        
-        //
-        
         float up = tp.getY() + yOffset;
         float down = up + height;
         float left = tp.getX() + xOffset;
@@ -111,25 +105,54 @@ public class HitboxPart extends Part {
         
         ArrayList<Entity> collided = this.entity.getScene().getCollissions(up, down, left, right);
         collided.remove(this.entity);
-        for (int i = 0; i < collided.size(); ++i) {
-            Entity ent = collided.get(i);
-            if (ent == this.entity) {
-                continue;
-            }
-            if (ent.has(StatsPart.class)) {
-                StatsPart entStats = ent.get(StatsPart.class);
-                if (entStats.faction == stats.faction) {
-                    continue;
-                }
-                
-                if (entStats.isInvulnerable == false) {
-                    entStats.inflictDamage(stats.damage);
-                }
-            }
-        }
         
-        if (stats.statsType == StatsType.BULLET && collided.size() > 0) {
-            this.entity.die();
+        switch (stats.statsType) {
+            case BULLET: {
+                for (int i = 0; i < collided.size(); ++i) {
+                    Entity ent = collided.get(i);
+                    if (ent == this.entity) {
+                        continue;
+                    }
+                    if (ent.has(StatsPart.class)) {
+                        StatsPart entStats = ent.get(StatsPart.class);
+                        if (entStats.faction == stats.faction) {
+                            continue;
+                        }
+
+                        if (entStats.isInvulnerable == false) {
+                            entStats.inflictDamage(stats.damage);
+                        }
+                    }
+                }
+
+                if (stats.statsType == StatsType.BULLET && collided.size() > 0) {
+                    this.entity.die();
+                }
+            } break;
+            case SHIP: {
+                if (stats.isInvulnerable) {
+                    break;
+                }
+                for (int i = 0; i < collided.size(); ++i) {
+                    Entity ent = collided.get(i);
+                    if (ent == this.entity) {
+                        continue;
+                    }
+                    if (ent.has(StatsPart.class)) {
+                        StatsPart entStats = ent.get(StatsPart.class);
+                        if (entStats.faction == stats.faction) {
+                            continue;
+                        }
+
+                        if (entStats.isInvulnerable == false) {
+                            entStats.inflictDamage(stats.damage);
+                        }
+                    }
+                }
+            } break;
+            default: {
+                
+            } break;
         }
     }
     

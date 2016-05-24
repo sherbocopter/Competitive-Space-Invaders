@@ -94,6 +94,7 @@ public class EntityFactory implements Commons {
         shipStats.faction = Faction.FACTION_ENEMY;
         shipStats.statsType = StatsType.SHIP;
         shipStats.damage = 50;
+        shipStats.invulnerableTime = (float) 0.1;
         shipStats.setActive(true);
         alien.attach(shipStats);
 
@@ -147,6 +148,7 @@ public class EntityFactory implements Commons {
         shipStats.faction = Faction.FACTION_ENEMY;
         shipStats.statsType = StatsType.SHIP;
         shipStats.damage = 50;
+        shipStats.invulnerableTime = (float) 0.1;
         shipStats.setActive(true);
         alien.attach(shipStats);
         
@@ -193,6 +195,7 @@ public class EntityFactory implements Commons {
         shipStats.faction = Faction.FACTION_ENEMY;
         shipStats.statsType = StatsType.SHIP;
         shipStats.damage = 50;
+        shipStats.invulnerableTime = (float) 0.1;
         shipStats.setActive(true);
         alien.attach(shipStats);
         
@@ -234,11 +237,12 @@ public class EntityFactory implements Commons {
         
         //shipStats
         StatsPart shipStats = new StatsPart();
-        shipStats.maxHitpoints = 100;
-        shipStats.setCurrentHitpoints(100);
+        shipStats.maxHitpoints = 150;
+        shipStats.setCurrentHitpoints(150);
         shipStats.faction = Faction.FACTION_FRIENDLY;
         shipStats.statsType = StatsType.SHIP;
-        shipStats.damage = 50;
+        shipStats.damage = 200;
+        shipStats.invulnerableTime = 1;
         shipStats.setActive(true);
         player.attach(shipStats);
         
