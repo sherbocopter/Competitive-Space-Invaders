@@ -23,14 +23,14 @@ public class WaveDictionary {
         WaveInfo wiBasicBlock = new WaveInfo();
         wiBasicBlock.type = WaveType.WAVE_BASIC_BLOCK;
         wiBasicBlock.name = "Basic Block";
-        wiBasicBlock.duration = 10;
+        wiBasicBlock.duration = 15;
         dictionary.put(WaveType.WAVE_BASIC_BLOCK, wiBasicBlock);
         
         //WAVE_MIXED_BLOCK
         WaveInfo wiMixedBlock = new WaveInfo();
         wiMixedBlock.type = WaveType.WAVE_MIXED_BLOCK;
         wiMixedBlock.name = "Mixed Block";
-        wiMixedBlock.duration = 15;
+        wiMixedBlock.duration = 10;
         dictionary.put(WaveType.WAVE_MIXED_BLOCK, wiMixedBlock);
     }
     

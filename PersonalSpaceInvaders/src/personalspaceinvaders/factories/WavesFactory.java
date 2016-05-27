@@ -28,9 +28,9 @@ public class WavesFactory implements Commons {
     //of monsters map (type and transform etc)
     //
     
-    //PRIMITIVES begin
+    //<editor-fold defaultstate="collapsed" desc="PRIMITIVES">
     public ArrayList<Entity> createLine(EntityType type, int count, float x1, float y1,
-                                        float x2, float y2) {
+            float x2, float y2) {
         if (count < 2) {
             throw new IllegalArgumentException();
         }
@@ -58,7 +58,7 @@ public class WavesFactory implements Commons {
         //not yet supported
         return null;
     }
-    //PRIMITIVES end
+//</editor-fold>
     
     public ArrayList<Entity> createWave(WaveType type) {
         switch(type) {
@@ -79,17 +79,17 @@ public class WavesFactory implements Commons {
         
         float left = 100;
         float right = 540;
-        float top = 100;
-        float bottom = 250;
+        float top = -520;
+        float bottom = -20;
         int horCount = 5;
-        int verCount = 3;
+        int verCount = 4;
         
         float stepX = (right - left) / (horCount - 1);
         float stepY = (bottom - top) / (verCount - 1);
         
         for (int i = 1; i <= verCount; ++i) {
             entities.addAll(createLine(EntityType.ALIEN_BASIC_WHITE, horCount,
-                                left, i * stepY, right, i * stepY));
+                                left, top + (i - 1) * stepY, right, top + (i - 1) * stepY));
         }
         
         return entities;
@@ -100,20 +100,20 @@ public class WavesFactory implements Commons {
         
         float left = 100;
         float right = 540;
-        float top = 100;
-        float bottom = 250;
+        float top = -320;
+        float bottom = -20;
         int horCount = 5;
-        int verCount = 3;
+        int verCount = 4;
         
         float stepX = (right - left) / (horCount - 1);
         float stepY = (bottom - top) / (verCount - 1);
         
         entities.addAll(createLine(EntityType.ALIEN_BASIC_WHITE, horCount,
-                                left, 1 * stepY, right, 1 * stepY));
+                                left, top + 0 * stepY, right, top + 0 * stepY));
         entities.addAll(createLine(EntityType.ALIEN_BASIC_GREEN, horCount,
-                                left, 2 * stepY, right, 3 * stepY));
+                                left, top + 1 * stepY, right, top + 2 * stepY));
         entities.addAll(createLine(EntityType.ALIEN_BASIC_RED, horCount,
-                                left, 4 * stepY, right, 4 * stepY));
+                                left, top + 3 * stepY, right, top + 3 * stepY));
         
         return entities;
     }

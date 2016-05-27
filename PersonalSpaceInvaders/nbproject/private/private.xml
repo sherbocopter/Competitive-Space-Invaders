@@ -3,15 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/MultiplayerScene.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/parts/HitboxPart.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/spriteUtilities/SpriteManager.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/spriteUtilities/SpriteInfo.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/networking/MultiplayerBase.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/TrainingScene.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/factories/EntityFactory.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/waveUtilities/WaveManagerPart.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/parts/SpritePart.java</file>
+            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/MainMenuScene.java</file>
+            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/GameSceneBase.java</file>
         </group>
     </open-files>
 </project-private>

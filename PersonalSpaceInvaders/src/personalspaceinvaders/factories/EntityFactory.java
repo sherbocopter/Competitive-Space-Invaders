@@ -28,10 +28,10 @@ import personalspaceinvaders.spriteUtilities.SpriteManager;
  * @author SHerbocopter
  */
 public class EntityFactory implements Commons {
-    public float enemyUpOffset = 0;
+    public float enemyUpOffset = 3000;
     public float enemyDownOffset = 0;
-    public float enemyLeftOffset = 0;
-    public float enemyRightOffset = 0;
+    public float enemyLeftOffset = 100;
+    public float enemyRightOffset = 100;
     
     private static final EntityFactory instance = new EntityFactory();
     private EntityFactory() { }
