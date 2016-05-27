@@ -3,6 +3,8 @@ package personalspaceinvaders.networking;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
+import personalspaceinvaders.SceneManager;
+import personalspaceinvaders.Scenes.MainMenuScene;
 import personalspaceinvaders.Scenes.MultiplayerScene;
 
 /**
@@ -10,8 +12,6 @@ import personalspaceinvaders.Scenes.MultiplayerScene;
  * @author SHerbocopter
  */
 public class MultiplayerHost extends MultiplayerBase {
-    public ServerSocket serverSocket;
-    
     public MultiplayerHost(MultiplayerScene scene) {
         this.scene = scene;
     }
@@ -32,7 +32,7 @@ public class MultiplayerHost extends MultiplayerBase {
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
-            //HERE GOES THE ABORT GAME COMMAND;
+            kill();
         }
     }
 }

@@ -1,11 +1,15 @@
 package personalspaceinvaders.networking;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import personalspaceinvaders.Commons;
 import personalspaceinvaders.Scene;
 import personalspaceinvaders.Scenes.MultiplayerScene;
@@ -20,13 +24,20 @@ import personalspaceinvaders.networking.serializables.WavesSer;
  */
 public class MultiplayerBase extends Thread implements Commons {
     public Socket clientSocket;
+    public ServerSocket serverSocket;
     public ObjectInputStream streamFromPeer = null;
     public ObjectOutputStream streamToPeer = null;
     public MultiplayerScene scene;
     private Message messageToSend = null;
     public boolean isHost = false;
     
+    private boolean shouldKill = false;
+    
     private Semaphore shouldSend = new Semaphore(0, true);
+    
+    public boolean getShouldKill() {
+        return shouldKill;
+    }
     
     public void sendMessage(Message message) {
         messageToSend = message;
@@ -65,6 +76,9 @@ public class MultiplayerBase extends Thread implements Commons {
         try {
             while (true) {
                 shouldSend.acquire();
+                
+                if (shouldKill) { break; }
+                
                 if (messageToSend != null) {
                     streamToPeer.writeObject(messageToSend);
                 }
@@ -77,12 +91,15 @@ public class MultiplayerBase extends Thread implements Commons {
         }
         catch (Exception ex) {
             System.out.println(ex.getMessage());
+            kill();
         }
     }
     
     private void receiveLoop() {
         try {
             while (true) {
+                if (shouldKill) { break; }
+                
                 Message message = (Message) streamFromPeer.readObject();
                 System.out.println(message.text);
 
@@ -102,6 +119,18 @@ public class MultiplayerBase extends Thread implements Commons {
             }
         }
         catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            kill();
+        }
+    }
+    
+    public void kill() {
+        System.out.println("Killin' it");
+        try {
+            if (clientSocket != null) { clientSocket.close(); }
+            if (serverSocket != null) { serverSocket.close(); }
+            shouldKill = true;
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
     }

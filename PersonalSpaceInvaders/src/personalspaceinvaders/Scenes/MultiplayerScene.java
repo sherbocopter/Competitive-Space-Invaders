@@ -360,13 +360,17 @@ public class MultiplayerScene extends GameSceneBase {
     
     @Override
     public void unload() {
-        
+        multiplayerBase.kill();
+        KeyboardManager.getInstance().resetKeyboardManager();
     }
     
     @Override
     public void update(float delta) {
         updateState();
         updateStatusBar();
+        if (multiplayerBase.getShouldKill()) {
+            goToMainMenu();
+        }
         
         super.update(delta);
     }
@@ -566,7 +570,6 @@ public class MultiplayerScene extends GameSceneBase {
     }
     
     private void goToMainMenu() {
-        KeyboardManager.getInstance().resetKeyboardManager();
         SceneManager.getInstance().changeScene(new MainMenuScene());
     }
 }
