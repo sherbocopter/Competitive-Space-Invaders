@@ -446,8 +446,8 @@ public class MultiplayerScene extends GameSceneBase {
         TransformPart tpWave2 = buttonWave2.get(TransformPart.class);
         tpWave2.setY(tpWave1.getY());
         tpWave2.setX(tpWave1.getX() + 100);
-        buttonWave2.get(HudFocusablePart.class).setCommand(new PushWaveToStackCommand(WaveType.WAVE_MIXED_BLOCK, this));
-        buttonWave2.get(TextLabelPart.class).setText("Mixed");
+        buttonWave2.get(HudFocusablePart.class).setCommand(new PushWaveToStackCommand(WaveType.WAVE_MIXED1_BLOCK, this));
+        buttonWave2.get(TextLabelPart.class).setText("Mixed 1");
         this.addEntity(buttonWave2);
         buttons.add(buttonWave2.get(HudFocusablePart.class));
         selectWaveEntities.add(buttonWave2);

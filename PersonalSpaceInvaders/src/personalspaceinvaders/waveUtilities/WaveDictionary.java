@@ -28,10 +28,10 @@ public class WaveDictionary {
         
         //WAVE_MIXED_BLOCK
         WaveInfo wiMixedBlock = new WaveInfo();
-        wiMixedBlock.type = WaveType.WAVE_MIXED_BLOCK;
+        wiMixedBlock.type = WaveType.WAVE_MIXED1_BLOCK;
         wiMixedBlock.name = "Mixed Block";
         wiMixedBlock.duration = 10;
-        dictionary.put(WaveType.WAVE_MIXED_BLOCK, wiMixedBlock);
+        dictionary.put(WaveType.WAVE_MIXED1_BLOCK, wiMixedBlock);
     }
     
     public WaveInfo getWaveInfo(WaveType type) {

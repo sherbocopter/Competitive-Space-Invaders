@@ -8,6 +8,8 @@ import personalspaceinvaders.Entity;
 import personalspaceinvaders.behaviours.BoundingBoxBehaviour;
 import personalspaceinvaders.behaviours.DieOffscreenBehaviour;
 import personalspaceinvaders.behaviours.FlyDownBehaviour;
+import personalspaceinvaders.behaviours.FlyLeftBehaviour;
+import personalspaceinvaders.behaviours.FlyRightBehaviour;
 import personalspaceinvaders.behaviours.FlyUpBehaviour;
 import personalspaceinvaders.behaviours.PlayerMoveBehaviour;
 import personalspaceinvaders.behaviours.WiggleBehaviour;
@@ -15,6 +17,7 @@ import personalspaceinvaders.parts.BasicGunPart;
 import personalspaceinvaders.parts.ControllerPart;
 import personalspaceinvaders.parts.HitboxPart;
 import personalspaceinvaders.parts.HudFocusablePart;
+import personalspaceinvaders.parts.SidewaysGunPart;
 import personalspaceinvaders.parts.SpritePart;
 import personalspaceinvaders.parts.StatsPart;
 import personalspaceinvaders.parts.StatsPart.Faction;
@@ -43,10 +46,13 @@ public class EntityFactory implements Commons {
         ALIEN_BASIC_WHITE,
         ALIEN_BASIC_RED,
         ALIEN_BASIC_GREEN,
+        ALIEN_SHOOTIE,
         PLAYER_BASIC,
         BUTTON_BASIC,
         LABEL_BASIC,
         BULLET_BASIC,
+        BULLET_LEFT,
+        BULLET_RIGHT,
         MAINMENU_BANNER
     }
     
@@ -63,6 +69,9 @@ public class EntityFactory implements Commons {
             case ALIEN_BASIC_GREEN: {
                 entity = createBasicGreenAlien();
             } break;
+            case ALIEN_SHOOTIE: {
+                entity = createShootieAlien();
+            } break;
             case PLAYER_BASIC: {
                 entity = createBasicPlayer();
             } break;
@@ -74,6 +83,12 @@ public class EntityFactory implements Commons {
             } break;
             case BULLET_BASIC: {
                 entity = createBasicBullet();
+            } break;
+            case BULLET_LEFT: {
+                entity = createLeftBullet();
+            } break;
+            case BULLET_RIGHT: {
+                entity = createRightBullet();
             } break;
             case MAINMENU_BANNER: {
                 entity = createMainMenuBanner();
@@ -234,6 +249,65 @@ public class EntityFactory implements Commons {
         return alien;
     }
     
+    private Entity createShootieAlien() {
+        Entity alien = new Entity();
+        
+        alien.attach(new TransformPart(0, 0, 0, 1));
+        
+        //shipStats
+        StatsPart shipStats = new StatsPart();
+        shipStats.maxHitpoints = 120;
+        shipStats.setCurrentHitpoints(80);
+        shipStats.faction = Faction.FACTION_ENEMY;
+        shipStats.statsType = StatsType.SHIP;
+        shipStats.damage = 50;
+        shipStats.invulnerableTime = (float) 0.1;
+        shipStats.setActive(true);
+        alien.attach(shipStats);
+
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("alien4"),
+                                            -25, -20, 0, 50, 40);
+        sprite.setVisible(true);
+        alien.attach(sprite);
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-25, -20, 0, 50, 40);
+        hitbox.setColor(Color.WHITE);
+        hitbox.setVisible(false);
+        hitbox.setActive(true);
+        alien.attach(hitbox);
+        
+        //sidewaysGun
+        SidewaysGunPart gunPart = new SidewaysGunPart(-30, 0, 30, 0);
+        gunPart.setShootKey(KeyEvent.VK_SPACE);
+        gunPart.setShootDelay((float) 0.3);
+        gunPart.setActive(true);
+        alien.attach(gunPart);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+            FlyDownBehaviour flyDown = new FlyDownBehaviour(45);
+            controller.attach(flyDown);
+            
+            WiggleBehaviour wiggle = new WiggleBehaviour(20, 5);
+            controller.attach(wiggle);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.upOffset = enemyUpOffset; //a lot
+            dieOffscreen.downOffset = enemyDownOffset;
+            dieOffscreen.leftOffset = enemyLeftOffset;
+            dieOffscreen.rightOffset = enemyRightOffset;
+            controller.attach(dieOffscreen);
+        controller.setActive(true);
+        alien.attach(controller);
+        
+        alien.setActive(true);
+        
+        return alien;
+    }
+    
     private Entity createBasicPlayer() {
         Entity player = new Entity();
         
@@ -353,6 +427,90 @@ public class EntityFactory implements Commons {
         ControllerPart controller = new ControllerPart();
             FlyUpBehaviour flyUp = new FlyUpBehaviour(350);
             controller.attach(flyUp);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.setAllBounds(10);
+            controller.attach(dieOffscreen);
+        controller.setActive(true);
+        bullet.attach(controller);
+        
+        return bullet;
+    }
+    
+    private Entity createRightBullet() {
+        Entity bullet = new Entity();
+        
+        bullet.attach(new TransformPart(0, 0, 0, 1));
+        
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("bullet1"),
+                                            -3, -5, 0, 6, 13);
+        sprite.setVisible(true);
+        bullet.attach(sprite);
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-3, -5, 0, 6, 10);
+        hitbox.setColor(Color.GREEN);
+        hitbox.setVisible(false);
+        hitbox.setActive(true);
+        bullet.attach(hitbox);
+        
+        //bulletStats
+        StatsPart stats = new StatsPart();
+        stats.maxHitpoints = 1;
+        stats.setCurrentHitpoints(1);
+        stats.damage = 80;
+        stats.statsType = StatsType.BULLET;
+        stats.setActive(true);
+        bullet.attach(stats);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+            FlyRightBehaviour flyRight = new FlyRightBehaviour(350);
+            controller.attach(flyRight);
+            
+            DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
+            dieOffscreen.setAllBounds(10);
+            controller.attach(dieOffscreen);
+        controller.setActive(true);
+        bullet.attach(controller);
+        
+        return bullet;
+    }
+    
+    private Entity createLeftBullet() {
+        Entity bullet = new Entity();
+        
+        bullet.attach(new TransformPart(0, 0, 0, 1));
+        
+        //sprite
+        SpriteManager sm = SpriteManager.getInstance();
+        SpritePart sprite = new SpritePart(sm.getImage("bullet1"),
+                                            -3, -5, 0, 6, 13);
+        sprite.setVisible(true);
+        bullet.attach(sprite);
+        
+        //hitbox
+        HitboxPart hitbox = new HitboxPart(-3, -5, 0, 6, 10);
+        hitbox.setColor(Color.GREEN);
+        hitbox.setVisible(false);
+        hitbox.setActive(true);
+        bullet.attach(hitbox);
+        
+        //bulletStats
+        StatsPart stats = new StatsPart();
+        stats.maxHitpoints = 1;
+        stats.setCurrentHitpoints(1);
+        stats.damage = 80;
+        stats.statsType = StatsType.BULLET;
+        stats.setActive(true);
+        bullet.attach(stats);
+        
+        //controller
+        ControllerPart controller = new ControllerPart();
+            FlyLeftBehaviour flyLeft = new FlyLeftBehaviour(350);
+            controller.attach(flyLeft);
             
             DieOffscreenBehaviour dieOffscreen = new DieOffscreenBehaviour();
             dieOffscreen.setAllBounds(10);

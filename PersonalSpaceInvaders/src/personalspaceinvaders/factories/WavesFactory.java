@@ -19,7 +19,8 @@ public class WavesFactory implements Commons {
     
     public static enum WaveType {
         WAVE_BASIC_BLOCK,
-        WAVE_MIXED_BLOCK,
+        WAVE_MIXED1_BLOCK,
+        WAVE_SHOOTIES,
         DUMMY
     }
     
@@ -65,8 +66,8 @@ public class WavesFactory implements Commons {
             case WAVE_BASIC_BLOCK: {
                 return createBasicBlock();
             }
-            case WAVE_MIXED_BLOCK: {
-                return createMixedBlock();
+            case WAVE_MIXED1_BLOCK: {
+                return createMixed1Block();
             }
             default: {
                 throw new IllegalArgumentException("waveType not found");
@@ -95,7 +96,7 @@ public class WavesFactory implements Commons {
         return entities;
     }
     
-    private ArrayList<Entity> createMixedBlock() {
+    private ArrayList<Entity> createMixed1Block() {
         ArrayList<Entity> entities = new ArrayList<>();
         
         float left = 100;

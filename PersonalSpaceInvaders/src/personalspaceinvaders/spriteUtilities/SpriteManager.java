@@ -16,6 +16,7 @@ public class SpriteManager {
         putSprite("alien1",     "res/sprites/alien1.png");
         putSprite("alien2",     "res/sprites/alien2.png");
         putSprite("alien3",     "res/sprites/alien3.png");
+        putSprite("alien4",     "res/sprites/alien4.png");
         putSprite("bullet1",    "res/sprites/bullet1.png");
     }
     public static SpriteManager getInstance() {
