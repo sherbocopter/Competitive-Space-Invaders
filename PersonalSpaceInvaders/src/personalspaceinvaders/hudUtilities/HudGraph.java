@@ -4,13 +4,13 @@ import java.util.HashMap;
 
 /**
  *
- * @author SHerbocopter
+ * @author bosSHerbocopter
  */
 public class HudGraph {
-    private boolean isActive = true;
-    private boolean isVisible = true;
+    /*spec_public*/private boolean isActive = true;
+    /*spec_public*/private boolean isVisible = true;
     
-    private HashMap<String, HudNode> graph = new HashMap<>();
+    /*spec_public*/private HashMap<String, HudNode> graph = new HashMap<>();
     
     //@public normal_behaviour
     //@ensures \result == isActive;
@@ -81,6 +81,5 @@ public class HudGraph {
         
         graph.put(nodeKey, node);
     }
-    
     
 }
