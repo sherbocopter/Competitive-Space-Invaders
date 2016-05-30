@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/MultiplayerScene.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/waveUtilities/WaveDictionary.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/factories/WavesFactory.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/factories/EntityFactory.java</file>
-            <file>file:/E:/GITHUB/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Scenes/TrainingScene.java</file>
+            <file>file:/C:/Users/Vladut/Documents/GitHub/Competitive-Space-Invaders/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/Game.java</file>
+            <file>file:/C:/Users/Vladut/Documents/GitHub/Competitive-Space-Invaders/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/behaviours/WiggleBehaviour.java</file>
+            <file>file:/C:/Users/Vladut/Documents/GitHub/Competitive-Space-Invaders/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/parts/StatsPart.java</file>
+            <file>file:/C:/Users/Vladut/Documents/GitHub/Competitive-Space-Invaders/Competitive-Space-Invaders/PersonalSpaceInvaders/src/personalspaceinvaders/hudUtilities/HudGraph.java</file>
         </group>
     </open-files>
 </project-private>
