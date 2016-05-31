@@ -121,4 +121,89 @@ public class StatsPart extends Part{
             }
         }
     }
+    
+    @Override
+    public boolean equals(Object other)
+    {
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof StatsPart))return false;
+        StatsPart otherMyClass = (StatsPart)other;
+        if(this.getDamage() != otherMyClass.getDamage())
+        {
+            return false;
+        }
+        if(this.getCurrentHitpoints()!= otherMyClass.getCurrentHitpoints())
+        {
+            return false;
+        }
+        if(this.getFaction()!= otherMyClass.getFaction())
+        {
+            return false;
+        }
+        if(this.getInvulnerablePassed()!= otherMyClass.getInvulnerablePassed())
+        {
+            return false;
+        }
+        if(this.getInvulnerableTime()!= otherMyClass.getInvulnerableTime())
+        {
+            return false;
+        }
+        if(this.getMaxHitpoints()!= otherMyClass.getMaxHitpoints())
+        {
+            return false;
+        }
+        if(this.getStatsType()!= otherMyClass.getStatsType())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public float getMaxHitpoints()
+    {
+        return maxHitpoints;
+    }
+
+    public float getDamage()
+    {
+        return damage;
+    }
+
+    public Faction getFaction()
+    {
+        return faction;
+    }
+
+    public StatsType getStatsType()
+    {
+        return statsType;
+    }
+
+    public boolean isIsInvulnerable()
+    {
+        return isInvulnerable;
+    }
+
+    public float getInvulnerableTime()
+    {
+        return invulnerableTime;
+    }
+
+    public float getInvulnerablePassed()
+    {
+        return invulnerablePassed;
+    }
+
+    public boolean isShouldDie()
+    {
+        return shouldDie;
+    }
+
+    public boolean isShouldInvulnerable()
+    {
+        return shouldInvulnerable;
+    }
+    
+    
 }
