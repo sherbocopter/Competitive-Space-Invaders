@@ -15,7 +15,7 @@ public class Game extends JFrame implements Commons {
     private void initUI() {
         add(SceneManager.getInstance());
         
-        setTitle("Personal Space Invaders - alpha af");
+        setTitle("Personal Space Invaders");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(BOARD_WIDTH, BOARD_HEIGHT);
         setLocationRelativeTo(null);
