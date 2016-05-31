@@ -54,3 +54,7 @@ PersonalSpaceInvaders/nbproject/private/private.xml
 /PersonalSpaceInvaders/dist/
 documentation/.~lock.documentatie_mds.doc#
 PersonalSpaceInvaders/nbproject/private/private.xml
+PersonalSpaceInvaders/build/test/results/TEST-test.BulletCreationTest.xml
+PersonalSpaceInvaders/build/test/results/TEST-test.StatsPartTest.xml
+PersonalSpaceInvaders/build/test/results/TEST-test.WaveDictionaryTest.xml
+PersonalSpaceInvaders/build/test/results/TEST-test.waveCreationTest.xml
